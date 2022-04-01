@@ -41,7 +41,7 @@ public class UserService {
     }
 //    TODO: Add admin role functionality
 //    TODO: Add a new separate Spring Security Class
-//    TODO: Add code for bad-request and user not found exception
+//    TODO: Add code for bad-request and user not found exception - NOW COMPLETED
 //    TODO: Add put method for updating user info - NOW COMPLETED
 
     public User findByLastName(String lastname) {
