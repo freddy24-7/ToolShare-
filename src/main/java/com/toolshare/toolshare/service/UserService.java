@@ -1,10 +1,13 @@
 package com.toolshare.toolshare.service;
 
+
+import com.toolshare.toolshare.exception.BadRequestException;
+import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
@@ -27,6 +31,12 @@ public class UserService {
 
     public User saveUser(User user) {
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Boolean existsEmail = userRepository
+                .selectExistsEmail(user.getEmail());
+        if (existsEmail) {
+            throw new BadRequestException(
+                    "Email " + user.getEmail() + " bestaat al");
+        }
         return userRepository.save(user);
     }
 //    TODO: Add admin role functionality
@@ -38,21 +48,13 @@ public class UserService {
         return userRepository.findByLastName(lastname).orElse(null);
     }
 
-    public User deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
-        userRepository.delete(user);
-        return user;
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(
+                    "Gebruiker met id " + userId + " bestaat niet");
+        }
+        userRepository.deleteById(userId);
     }
-
-//    public User updateUser(Long userId) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
-//        user.setFirstName(user.getFirstName());
-//        user.setLastName(user.getLastName());
-//        user.setEmail(user.getEmail());
-//        user.setPassword(user.getPassword());
-//        user.setMobileNumber(user.getMobileNumber());
-//        userRepository.save(user);
-//        return user;
 
     @Transactional
     public void updateUser(Long userId,
