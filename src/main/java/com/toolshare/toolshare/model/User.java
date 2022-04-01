@@ -24,7 +24,7 @@ public class User {
     @GeneratedValue(
             generator = "appUser_sequence",
             strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private Long userId;
 
     @Email
     @NotBlank
@@ -46,6 +46,7 @@ public class User {
     @NotBlank
     @Column(nullable = false)
     private String mobileNumber;
+//    TODO: RegEx for mobileNumber
 
     public User(String email, String password, String firstName, String lastName, String mobileNumber) {
         this.email = email;
