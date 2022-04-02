@@ -22,6 +22,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @PostMapping
     public void saveUser(@Valid @RequestBody User user) {
         userService.saveUser(user);

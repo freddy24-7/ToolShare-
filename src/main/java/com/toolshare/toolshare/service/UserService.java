@@ -8,6 +8,8 @@ import com.toolshare.toolshare.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,6 +39,7 @@ public class UserService {
             throw new BadRequestException(
                     "Email " + user.getEmail() + " bestaat al");
         }
+//        TODO: Add bad request logic for invalid phone input
         return userRepository.save(user);
     }
 //    TODO: Add admin role functionality

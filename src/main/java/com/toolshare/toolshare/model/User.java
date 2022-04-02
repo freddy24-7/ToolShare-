@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @ToString
 @Getter
@@ -44,9 +45,10 @@ public class User {
     private String lastName;
 
     @NotBlank
+    @Pattern(regexp="^\\d{10}$", message="je mobiele nummer moet tien cijfers hebben")
     @Column(nullable = false)
     private String mobileNumber;
-//    TODO: RegEx for mobileNumber
+//    TODO: RegEx for mobileNumber - NOW COMPLETED
 
     public User(String email, String password, String firstName, String lastName, String mobileNumber) {
         this.email = email;
