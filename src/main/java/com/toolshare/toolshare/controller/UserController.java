@@ -4,7 +4,6 @@ import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,12 +32,6 @@ public class UserController {
             @PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
     }
-//    @PutMapping("{userId}")
-//    public ResponseEntity<User> updateUser
-//            (@PathVariable long userId, @RequestBody User user) {
-//        userService.updateUser(userId);
-//
-//        return ResponseEntity.ok(user);
 
     @PutMapping(path = "{userId}")
     public void updateUser(

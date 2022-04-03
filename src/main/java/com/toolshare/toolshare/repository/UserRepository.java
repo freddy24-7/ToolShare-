@@ -15,6 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByEmail(String email);
 
+    //Custom Query
+    @Query("SELECT u FROM User u WHERE u.email= ?1")
+    User findByEmail(String email);
+
     @Query("" +
             "SELECT CASE WHEN COUNT(u) > 0 THEN " +
             "TRUE ELSE FALSE END " +

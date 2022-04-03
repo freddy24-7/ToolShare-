@@ -7,9 +7,7 @@ import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,11 +26,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
     public User saveUser(User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Boolean existsEmail = userRepository
                 .selectExistsEmail(user.getEmail());
         if (existsEmail) {
@@ -40,6 +34,9 @@ public class UserService {
                     "Email " + user.getEmail() + " bestaat al");
         }
 //        TODO: Add bad request logic for invalid phone input
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
 //    TODO: Add admin role functionality
