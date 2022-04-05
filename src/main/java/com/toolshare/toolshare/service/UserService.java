@@ -1,15 +1,12 @@
 package com.toolshare.toolshare.service;
 
-
 import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,9 +35,9 @@ public class UserService implements IUserService {
                     "Email " + user.getEmail() + " bestaat al");
         }
 //        TODO: Add bad request logic for invalid phone input
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        String encodedPassword = encoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         user.setRole(Role.USER);
         return userRepository.save(user);
     }
