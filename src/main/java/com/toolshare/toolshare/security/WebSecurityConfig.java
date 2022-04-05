@@ -1,6 +1,6 @@
 package com.toolshare.toolshare.security;
 
-import com.toolshare.toolshare.service.SecurityUserDetailsService;
+import com.toolshare.toolshare.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +20,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    @Override
     @Bean
     public UserDetailsService userDetailsService() {
-        return new SecurityUserDetailsService();
+
+        return new CustomUserDetailsService();
     }
 
     @Bean
@@ -49,16 +51,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users").authenticated()
+                .antMatchers("/users", "/", "/css/*", "/js/*").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .usernameParameter("email")
-                .defaultSuccessUrl("/list/users")
+                .defaultSuccessUrl("/users")
                 .permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/").permitAll();
     }
+
 
 
 }

@@ -27,36 +27,35 @@ public class User {
             strategy = GenerationType.SEQUENCE)
     private Long userId;
 
+    @NotBlank
+    @Column(name="username", nullable = false, unique = true)
+    private String username;
+
     @Email
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(name ="email", nullable = false, unique = true)
     private String email;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name="password", nullable = false)
     private String password;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name="firstName", nullable = false)
     private String firstName;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name="lastName", nullable = false)
     private String lastName;
 
     @NotBlank
     @Pattern(regexp="^\\d{10}$", message="je mobiele nummer moet tien cijfers hebben")
-    @Column(nullable = false)
+    @Column(name="mobileNumber", nullable = false)
     private String mobileNumber;
 //    TODO: RegEx for mobileNumber - NOW COMPLETED
 
-    public User(String email, String password, String firstName, String lastName, String mobileNumber) {
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.mobileNumber = mobileNumber;
-    }
-
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", nullable = false)
+    private Role role;
 
 }

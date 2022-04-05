@@ -3,6 +3,7 @@ package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
+import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -37,6 +39,7 @@ public class UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 //    TODO: Add admin role functionality
@@ -44,9 +47,9 @@ public class UserService {
 //    TODO: Add code for bad-request and user not found exception - NOW COMPLETED
 //    TODO: Add put method for updating user info - NOW COMPLETED
 
-    public User findByLastName(String lastname) {
-        return userRepository.findByLastName(lastname).orElse(null);
-    }
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+   }
 
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
@@ -55,9 +58,15 @@ public class UserService {
         }
         userRepository.deleteById(userId);
     }
+    public User changeRole(Role newRole, String username) {
+        return userRepository.updateUserRole(username, newRole);
+
+    }
+
 
     @Transactional
     public void updateUser(Long userId,
+                           String username,
                            String email,
                            String password,
                            String firstName,
@@ -76,6 +85,17 @@ public class UserService {
                 throw new IllegalStateException("email bestaat al");
             }
             user.setEmail(email);
+
+        }
+        if (username != null &&
+                username.length() > 0 &&
+                !Objects.equals(user.getUsername(), username)) {
+            Optional<User> userOptional = userRepository
+                    .findUserByUsername(username);
+            if (userOptional.isPresent()) {
+                throw new IllegalStateException("email bestaat al");
+            }
+            user.setUsername(username);
 
         }
         if (password != null &&
@@ -101,14 +121,4 @@ public class UserService {
 
     }
 
-
 }
-
-
-
-
-
-
-
-
-
