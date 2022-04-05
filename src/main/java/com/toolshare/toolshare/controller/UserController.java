@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.User;
+import com.toolshare.toolshare.service.IUserService;
 import com.toolshare.toolshare.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +11,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/users")
 @AllArgsConstructor
+@RequestMapping(path = "/api/user")
 public class UserController {
 
     @Autowired
-    private final UserService userService;
+    private IUserService userService;
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userService.getAllUsers();
+        return userService.findAllUsers();
     }
 
     @PostMapping

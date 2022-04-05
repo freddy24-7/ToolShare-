@@ -7,8 +7,9 @@ import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,18 +17,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
 
-
-    public List<User> getAllUsers() {
+    @Override
+    public List<User> findAllUsers()
+    {
         return userRepository.findAll();
     }
 
+    @Override
     public User saveUser(User user) {
         Boolean existsEmail = userRepository
                 .selectExistsEmail(user.getEmail());
@@ -36,9 +38,9 @@ public class UserService {
                     "Email " + user.getEmail() + " bestaat al");
         }
 //        TODO: Add bad request logic for invalid phone input
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String encodedPassword = encoder.encode(user.getPassword());
+//        user.setPassword(encodedPassword);
         user.setRole(Role.USER);
         return userRepository.save(user);
     }
@@ -47,20 +49,27 @@ public class UserService {
 //    TODO: Add code for bad-request and user not found exception - NOW COMPLETED
 //    TODO: Add put method for updating user info - NOW COMPLETED
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
    }
 
-    public void deleteUser(Long userId) {
+   @Override
+   public User deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(
                     "Gebruiker met id " + userId + " bestaat niet");
         }
-        userRepository.deleteById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
+        userRepository.delete(user);
+        return user;
     }
-    public User changeRole(Role newRole, String username) {
-        return userRepository.updateUserRole(username, newRole);
-
+    @Override
+    public User changeRole(Role newRole, String username)
+    {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException());
+        user.setRole(newRole);
+        return userRepository.save(user);
     }
 
 
