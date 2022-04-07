@@ -1,7 +1,7 @@
 package com.toolshare.toolshare.security;
 
 import com.toolshare.toolshare.model.User;
-import com.toolshare.toolshare.repository.UserRepository;
+import com.toolshare.toolshare.service.UserServiceImpl;
 import com.toolshare.toolshare.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,24 +14,23 @@ import java.util.Set;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
     @Autowired
-    private UserRepository userRepository;
+    private UserServiceImpl userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
         Set<GrantedAuthority> authorities = Set.of(SecurityUtils.convertToAuthority(user.getRole().name()));
-        return UserPrincipal.builder()
+
+        return UserPrinciple.builder()
                 .user(user)
-                .id(user.getUserId())
+                .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)
                 .build();
     }
-
 }
