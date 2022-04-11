@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -42,6 +43,9 @@ public class ShareItem {
 
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareitem")
+//    private Set<LoanAction> loanList;
 
 
 
