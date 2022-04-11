@@ -1,15 +1,12 @@
 package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.Participant;
-import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.service.participantservice.ParticipantService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
