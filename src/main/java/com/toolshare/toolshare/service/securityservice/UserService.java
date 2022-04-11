@@ -1,4 +1,4 @@
-package com.toolshare.toolshare.service;
+package com.toolshare.toolshare.service.securityservice;
 
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
@@ -12,6 +12,5 @@ public interface UserService {
 
         void changeRole(Role newRole, String username);
 
-        void updateUser(Long id, String username, String email, String password, String mobileNumber);
 }
 

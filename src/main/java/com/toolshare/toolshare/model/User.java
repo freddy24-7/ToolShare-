@@ -35,10 +35,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Email
     @NotBlank
-    @Column(name ="email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;

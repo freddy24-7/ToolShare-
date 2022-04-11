@@ -1,8 +1,8 @@
 package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.User;
-import com.toolshare.toolshare.service.AuthenticationService;
-import com.toolshare.toolshare.service.UserService;
+import com.toolshare.toolshare.service.securityservice.AuthenticationService;
+import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

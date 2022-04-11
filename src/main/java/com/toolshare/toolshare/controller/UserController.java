@@ -2,7 +2,7 @@ package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.security.UserPrinciple;
-import com.toolshare.toolshare.service.UserService;
+import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

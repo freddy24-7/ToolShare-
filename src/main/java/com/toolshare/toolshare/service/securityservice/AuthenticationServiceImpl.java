@@ -1,4 +1,4 @@
-package com.toolshare.toolshare.service;
+package com.toolshare.toolshare.service.securityservice;
 
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.security.UserPrinciple;

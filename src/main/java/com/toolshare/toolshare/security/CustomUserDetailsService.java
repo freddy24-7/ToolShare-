@@ -1,7 +1,7 @@
 package com.toolshare.toolshare.security;
 
 import com.toolshare.toolshare.model.User;
-import com.toolshare.toolshare.service.UserServiceImpl;
+import com.toolshare.toolshare.service.securityservice.UserServiceImpl;
 import com.toolshare.toolshare.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
