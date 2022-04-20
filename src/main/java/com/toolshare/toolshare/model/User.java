@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @NotBlank
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "create_time", nullable = false)
