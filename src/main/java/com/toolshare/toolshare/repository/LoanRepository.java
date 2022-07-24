@@ -14,8 +14,8 @@ public interface LoanRepository extends JpaRepository <LoanAction, Long> {
     @Query("select " +
               "sha.itemName as name, sha.phoneNumber as phoneNumber, loa.loanTime as LoanTime " +
                "from LoanAction loa left join ShareItem sha on sha.itemId = loa.itemId " +
-               "where loa.participantId = :participantId")
+               "where loa.id = :id")
 
-    List<LoanItem> findAllLoansOfUser(@Param("participantId") Long participantId);
+    List<LoanItem> findAllLoansOfUser(@Param("id") Long id);
 
 }

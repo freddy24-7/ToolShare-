@@ -22,8 +22,8 @@ public class LoanServiceImpl implements LoanService {
         return loanRepository.save(loanAction);
     }
 
-    public List<LoanItem> findLoanItemsOfParticipant(Long participantId) {
-        return loanRepository.findAllLoansOfUser(participantId);
+    public List<LoanItem> findLoanItemsOfParticipant(Long id) {
+        return loanRepository.findAllLoansOfUser(id);
     }
 
 }

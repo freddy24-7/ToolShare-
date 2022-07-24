@@ -25,15 +25,11 @@ public class Participant {
     @GeneratedValue(
             generator = "participant_sequence",
             strategy = GenerationType.SEQUENCE)
-    private Long participantId;
+    private Long id;
 
     @Email
     @Column(name="email", nullable = false, unique = true)
     private String email;
-
-    @NotBlank
-    @Column(name="emailPassword", nullable = false)
-    private String emailPassword;
 
     @NotBlank
     @Column(name="firstname", nullable = false)

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Part;
 import java.util.List;
 
 @RestController
@@ -22,25 +23,25 @@ public class ParticipantController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveParticipant(@RequestBody Participant participant)
-    {
+    public ResponseEntity<?> saveParticipant(@RequestBody Participant participant) {
         return new ResponseEntity<>(participantService.saveParticipant(participant), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "{participantId}")
+    @DeleteMapping(path = "{id}")
     public void deleteParticipant(
-            @PathVariable("participantId") Long participantId) {
-        participantService.deleteParticipant(participantId);
+            @PathVariable("id") Long id) {
+        participantService.deleteParticipant(id);
     }
 
-    @PutMapping(path = "{participantId}")
-    public void updateParticipant(
-            @PathVariable("participantId") Long participantId,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String emailPassword,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String mobileNumber) {
-        participantService.updateParticipant(participantId, email, emailPassword, firstName, lastName, mobileNumber);
+    @GetMapping(path = "{id}")
+    public Participant getParticipantById(@PathVariable long id) {
+        return participantService.getParticipantById(id);
     }
-}
+
+    @PutMapping(path = "{id}")
+    public ResponseEntity<Participant> updateParticipant(@RequestBody Participant participant,
+                                                         @PathVariable Long id) {
+        return new ResponseEntity<Participant>(participantService.updateParticipant(participant, id), HttpStatus.OK);
+    }
+};
+

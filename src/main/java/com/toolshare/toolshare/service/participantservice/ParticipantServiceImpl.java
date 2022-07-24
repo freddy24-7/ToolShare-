@@ -1,14 +1,19 @@
 package com.toolshare.toolshare.service.participantservice;
 
 import com.toolshare.toolshare.exception.BadRequestException;
+import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -41,60 +46,40 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
-    public Participant deleteParticipant(Long participantId) {
-        if (!participantRepository.existsById(participantId)) {
+    public Participant deleteParticipant(Long id) {
+        if (!participantRepository.existsById(id)) {
             throw new UserNotFoundException(
-                    "Lid met id " + participantId + " bestaat niet");
+                    "Lid met id " + id + " bestaat niet");
         }
-        Participant participant = participantRepository.findById(participantId).orElseThrow(() -> new RuntimeException());
+        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         participantRepository.delete(participant);
         return participant;
     }
 
-    @Transactional
-    public void updateParticipant(Long participantId,
-                           String email,
-                           String emailPassword,
-                           String firstName,
-                           String lastName,
-                           String mobileNumber) {
-        Participant participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "lid met id " + participantId + " bestaat niet."));
 
-        if (email != null &&
-                email.length() > 0 &&
-                !Objects.equals(participant.getEmail(), email)) {
-            Optional<Participant> participantOptional = participantRepository
-                    .findParticipantByEmail(email);
-            if (participantOptional.isPresent()) {
-                throw new IllegalStateException("email bestaat al");
-            }
-            participant.setEmail(email);
+    //previous version did not return a requestbody (was void) so changing the put-method
+    //Using a ternary to check for existence of user, before changing values
+    @Override
+    public Participant updateParticipant(
+            Participant participant, Long id)
+    {
+        Participant currenParticipant = getParticipantById(id);
+        currenParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currenParticipant.getFirstName());
+        currenParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currenParticipant.getLastName());
+        currenParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currenParticipant.getEmail());
+        currenParticipant.setMobileNumber(participant.getMobileNumber() != null ? participant.getMobileNumber() : currenParticipant.getMobileNumber());
+        return participantRepository.save(currenParticipant);
+    }
 
+    @Override
+    public Participant getParticipantById(Long id) {
+        if (!participantRepository.existsById(id)) {
+            throw new ResourceNotFoundException(
+                    "Lid met id " + id + " bestaat niet");
         }
-        if (emailPassword != null &&
-                emailPassword.length() > 0 &&
-                !Objects.equals(participant.getEmailPassword(), emailPassword)) {
-            participant.setEmailPassword(emailPassword);
-        }
-
-        if (firstName != null &&
-                firstName.length() > 0 &&
-                !Objects.equals(participant.getFirstName(), firstName)) {
-            participant.setFirstName(firstName);
-        }
-        if (lastName != null &&
-                lastName.length() > 0 &&
-                !Objects.equals(participant.getLastName(), lastName)) {
-            participant.setLastName(lastName);
-        }
-        if (mobileNumber != null &&
-                mobileNumber.length() > 0 &&
-                !Objects.equals(participant.getMobileNumber(), mobileNumber)) {
-            participant.setMobileNumber(mobileNumber);
-        }
-
+        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException())
+                ;
+        return participant;
     }
 
 }

@@ -35,7 +35,6 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @NotBlank
     @Column(name = "name")
     private String name;
 

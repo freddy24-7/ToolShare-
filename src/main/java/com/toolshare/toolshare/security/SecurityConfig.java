@@ -3,6 +3,7 @@ package com.toolshare.toolshare.security;
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.security.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -48,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/product").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/participant/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/participant/**").permitAll()
                 .antMatchers("/api/product/**").hasRole(Role.ADMIN.name())
                 .anyRequest().authenticated();
 
@@ -66,6 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Value("${allowed.origin}")
+    private String allowedOrigin;
     @Bean
     public WebMvcConfigurer corsConfigurer()
     {
@@ -75,8 +80,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             public void addCorsMappings(CorsRegistry registry)
             {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*");
+                        .allowedOrigins(allowedOrigin)
+                        .allowedMethods("POST", "GET", "PUT", "DELETE")
+                        .allowedHeaders("Content-Type", "Authorization")
+                        .allowCredentials(true);
+
             }
         };
     }

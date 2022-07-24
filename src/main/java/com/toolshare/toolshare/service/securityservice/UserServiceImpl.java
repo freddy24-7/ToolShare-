@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
         userRepository.updateUserRole(username, newRole);
     }
 
-//    @Override
-//    public List<User> findAllUsers() {
-//        return null;
-//    }
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
 
 }

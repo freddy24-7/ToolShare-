@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "loanaction")
+@Table(name = "loan_actions")
 public class LoanAction {
 
     @Id
@@ -21,11 +21,11 @@ public class LoanAction {
             strategy = GenerationType.SEQUENCE)
     private Long loanId;
 
-    @Column(name="participant_id", nullable = false)
-    private Long participantId;
+    @Column(name="id", nullable = false)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_id", referencedColumnName = "participantId", insertable = false, updatable = false)//It is only for foreign key.
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)//It is only for foreign key.
     private Participant participant;
 
     @Column(name = "item_id", nullable = false)
