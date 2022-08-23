@@ -44,6 +44,10 @@ public class ShareItem {
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Participant participant;
+
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareitem")
 //    private Set<LoanAction> loanList;
 

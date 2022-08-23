@@ -1,5 +1,6 @@
 package com.toolshare.toolshare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,10 +12,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
     @Id
     @SequenceGenerator(
@@ -25,6 +25,7 @@ public class User {
     @GeneratedValue(
             generator = "User_sequence",
             strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank
@@ -47,6 +48,22 @@ public class User {
 
     @Transient
     private String token;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
+    @JoinColumn(name = "participant_id", referencedColumnName = "id", nullable = true)
+    private Participant participant;
+
+    public User() {
+    }
+
+    public User(String username, String password, String name, LocalDateTime createTime, Role role, String token, Participant participant) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.createTime = createTime;
+        this.role = role;
+        this.token = token;
+    }
 }
 
 

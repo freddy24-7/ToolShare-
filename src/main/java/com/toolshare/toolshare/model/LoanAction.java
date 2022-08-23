@@ -25,7 +25,7 @@ public class LoanAction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)//It is only for foreign key.
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
     private Participant participant;
 
     @Column(name = "item_id", nullable = false)

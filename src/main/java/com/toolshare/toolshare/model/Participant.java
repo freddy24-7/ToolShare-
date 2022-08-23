@@ -1,5 +1,6 @@
 package com.toolshare.toolshare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
@@ -11,10 +12,9 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @EqualsAndHashCode
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "participants")
+@Table(name = "Participants")
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -24,7 +24,8 @@ public class Participant {
     )
     @GeneratedValue(
             generator = "participant_sequence",
-            strategy = GenerationType.SEQUENCE)
+            strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
     @Email
@@ -43,6 +44,15 @@ public class Participant {
     @Pattern(regexp="^\\d{10}$", message="je mobiele nummer moet tien cijfers hebben")
     @Column(name="mobileNumber", nullable = false)
     private String mobileNumber;
-//    TODO: RegEx for mobileNumber - NOW COMPLETED
+    //    TODO: RegEx for mobileNumber - NOW COMPLETED
 
+    public Participant() {
+    }
+
+    public Participant(String email, String firstName, String lastName, String mobileNumber, User user) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobileNumber = mobileNumber;
+    }
 }
