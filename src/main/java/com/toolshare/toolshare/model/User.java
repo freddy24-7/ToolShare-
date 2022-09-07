@@ -13,31 +13,34 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-@Entity
-@Table(name = "Users")
+@Entity(name = "User")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "username_unique",
+                        columnNames = "username")
+        }
+)
 public class User {
     @Id
     @SequenceGenerator(
-            name = "User_sequence",
-            sequenceName = "User_sequence",
+            name = "user_sequence",
+            sequenceName = "user_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
-            generator = "User_sequence",
+            generator = "user_sequence",
             strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @Column(name = "id",
+            updatable = false)
     private Long id;
 
     @NotBlank
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", nullable = false, columnDefinition = "TEXT")
     private String username;
 
     @NotBlank
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, columnDefinition = "TEXT")
     private String password;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
@@ -49,21 +52,15 @@ public class User {
     @Transient
     private String token;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = User.class)
-    @JoinColumn(name = "participant_id", referencedColumnName = "id", nullable = true)
+    @OneToOne(
+            mappedBy = "user",
+            orphanRemoval = true
+    )
     private Participant participant;
 
     public User() {
     }
 
-    public User(String username, String password, String name, LocalDateTime createTime, Role role, String token, Participant participant) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.createTime = createTime;
-        this.role = role;
-        this.token = token;
-    }
 }
 
 

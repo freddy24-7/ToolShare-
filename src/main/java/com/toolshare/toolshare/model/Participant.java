@@ -13,8 +13,13 @@ import javax.validation.constraints.Pattern;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-@Entity
-@Table(name = "Participants")
+@Entity(name = "Participant")
+@Table(name = "participant",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "participant_email_unique",
+                        columnNames = "email")
+        }
+)
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -25,11 +30,12 @@ public class Participant {
     @GeneratedValue(
             generator = "participant_sequence",
             strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "id",
+            updatable = false)
     private Long id;
 
     @Email
-    @Column(name="email", nullable = false, unique = true)
+    @Column(name="email", nullable = false)
     private String email;
 
     @NotBlank
@@ -45,6 +51,21 @@ public class Participant {
     @Column(name="mobileNumber", nullable = false)
     private String mobileNumber;
     //    TODO: RegEx for mobileNumber - NOW COMPLETED
+
+
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "participant_user_id_fk"
+            )
+    )
+    private User user;
 
     public Participant() {
     }
