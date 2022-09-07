@@ -4,7 +4,9 @@ import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
+import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.ParticipantRepository;
+import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public List<Participant> findAllParticipants() {
         return participantRepository.findAll();
@@ -30,6 +35,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public Participant saveParticipant(Participant participant) {
+        participant.setUser(userService.getLoggedInUser());
         Boolean existsEmail = Boolean.valueOf(participantRepository
                 .selectExistsEmail(participant.getEmail()));
 

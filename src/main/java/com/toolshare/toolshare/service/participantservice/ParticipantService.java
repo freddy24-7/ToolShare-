@@ -22,4 +22,5 @@ public interface ParticipantService {
     Participant getParticipantById(Long id);
 
     Participant updateParticipant(Participant participant, Long id);
+
 }
