@@ -1,12 +1,16 @@
 package com.toolshare.toolshare.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @ToString
 @Getter
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
                         columnNames = "username")
         }
 )
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class User {
     @Id
     @SequenceGenerator(
@@ -28,8 +33,8 @@ public class User {
             allocationSize = 1
     )
     @GeneratedValue(
-            generator = "user_sequence",
-            strategy = GenerationType.SEQUENCE)
+            strategy = SEQUENCE,
+            generator = "user_sequence")
     @Column(name = "id",
             updatable = false)
     private Long id;
@@ -52,15 +57,24 @@ public class User {
     @Transient
     private String token;
 
-    @OneToOne(
-            mappedBy = "user",
-            orphanRemoval = true
-    )
-    private Participant participant;
+//    @OneToOne(
+//            mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            fetch = FetchType.LAZY
+//    )
+//    private Participant participant;
 
     public User() {
     }
 
+    public User(String username, String password, LocalDateTime createTime, Role role, String token, Participant participant) {
+        this.username = username;
+        this.password = password;
+        this.createTime = createTime;
+        this.role = role;
+        this.token = token;
+    }
 }
 
 

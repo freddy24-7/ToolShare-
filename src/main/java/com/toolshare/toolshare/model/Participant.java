@@ -1,12 +1,17 @@
 package com.toolshare.toolshare.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @ToString
 @Getter
@@ -20,6 +25,7 @@ import javax.validation.constraints.Pattern;
                         columnNames = "email")
         }
 )
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -29,7 +35,7 @@ public class Participant {
     )
     @GeneratedValue(
             generator = "participant_sequence",
-            strategy = GenerationType.AUTO)
+            strategy = SEQUENCE)
     @Column(name = "id",
             updatable = false)
     private Long id;
@@ -65,6 +71,7 @@ public class Participant {
                     name = "participant_user_id_fk"
             )
     )
+//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private User user;
 
     public Participant() {
