@@ -25,7 +25,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
                         columnNames = "email")
         }
 )
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -58,8 +58,6 @@ public class Participant {
     private String mobileNumber;
     //    TODO: RegEx for mobileNumber - NOW COMPLETED
 
-
-
     @OneToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
@@ -71,16 +69,16 @@ public class Participant {
                     name = "participant_user_id_fk"
             )
     )
-//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private User user;
 
     public Participant() {
     }
 
-    public Participant(String email, String firstName, String lastName, String mobileNumber, User user) {
+    public Participant(String email, String firstName, String lastName, String mobileNumber, String fileName, String fileType, byte[] data, User user) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;
+
     }
 }
