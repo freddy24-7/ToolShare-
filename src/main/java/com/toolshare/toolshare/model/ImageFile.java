@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.model;
 
 
+import com.toolshare.toolshare.repository.ImageFileRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -16,7 +17,6 @@ public class ImageFile {
 
     @Id
     @GeneratedValue(generator = "uuid")
-    //????
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
@@ -31,4 +31,6 @@ public class ImageFile {
         this.fileType = fileType;
         this.data = data;
     }
+
+
 }

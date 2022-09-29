@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("")
 public class FileController {
 
     private FileService fileService;
@@ -25,13 +25,13 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("api/imagefile/upload")
     public DataObtained uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         ImageFile imageFile = null;
         String downloadUrl = "";
         imageFile = fileService.saveImageFile(file);
         downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
+                .path("download/")
                 .path(imageFile.getId())
                 .toUriString();
         return new DataObtained(imageFile.getFileName(),
@@ -42,7 +42,7 @@ public class FileController {
 
     }
 
-    @GetMapping("/download/{fileId}")
+    @GetMapping("download/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) throws Exception {
         ImageFile imageFile = null;
         imageFile = fileService.getImageFile(fileId);

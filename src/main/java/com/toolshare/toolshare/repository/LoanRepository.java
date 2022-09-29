@@ -12,7 +12,7 @@ public interface LoanRepository extends JpaRepository <LoanAction, Long> {
 
     //We want to find item and date
     @Query("select " +
-              "sha.itemName as name, sha.phoneNumber as phoneNumber, loa.loanTime as LoanTime " +
+              "sha.itemName as name, loa.loanTime as LoanTime " +
                "from LoanAction loa left join ShareItem sha on sha.itemId = loa.itemId " +
                "where loa.id = :id")
 

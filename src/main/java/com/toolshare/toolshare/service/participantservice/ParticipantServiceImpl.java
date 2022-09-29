@@ -4,8 +4,12 @@ import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
+import com.toolshare.toolshare.model.ImageFile;
+
 import com.toolshare.toolshare.model.User;
+import com.toolshare.toolshare.repository.ImageFileRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
+import com.toolshare.toolshare.service.fileService.FileService;
 import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +30,13 @@ public class ParticipantServiceImpl implements ParticipantService {
     private ParticipantRepository participantRepository;
 
     @Autowired
+    private ImageFileRepository imageFileRepository;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public List<Participant> findAllParticipants() {

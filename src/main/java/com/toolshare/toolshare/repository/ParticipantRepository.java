@@ -13,7 +13,6 @@ public interface ParticipantRepository extends JpaRepository <Participant, Long>
 
     Optional<Participant> findParticipantByEmail(String email);
 
-
     default String selectExistsEmail(String email) {
         return email;
     }

@@ -36,20 +36,18 @@ public class ShareItem {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotBlank
-    @Pattern(regexp="^\\d{10}$", message="je nummer moet tien cijfers hebben")
-    @Column(name="phoneNumber", nullable = false)
-    private String phoneNumber;
-
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //A participant can contribute several items as lend-items, so many to one
+    @ManyToOne
     @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
     private Participant participant;
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareitem")
-//    private Set<LoanAction> loanList;
+    //An item can have many loan actions, so one to many
+    //Bidirectional relationship
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareItem")
+    private Set<LoanAction> loanList;
 
 
 

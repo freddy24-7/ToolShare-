@@ -8,5 +8,7 @@ public interface FileService {
     ImageFile saveImageFile(MultipartFile file) throws Exception;
 
 
-    ImageFile getImageFile(String fileId) throws Exception;
+    ImageFile getImageFile(String id) throws Exception;
+
+
 }

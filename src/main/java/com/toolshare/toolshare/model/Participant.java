@@ -52,6 +52,9 @@ public class Participant {
     @Column(name="lastname", nullable = false)
     private String lastName;
 
+    @Column(name="photoURL")
+    private String photoURL;
+
     @NotBlank
     @Pattern(regexp="^\\d{10}$", message="je mobiele nummer moet tien cijfers hebben")
     @Column(name="mobileNumber", nullable = false)
@@ -73,12 +76,11 @@ public class Participant {
 
     public Participant() {
     }
-
-    public Participant(String email, String firstName, String lastName, String mobileNumber, String fileName, String fileType, byte[] data, User user) {
+    public Participant(String email, String firstName, String lastName, String mobileNumber, User user, ImageFile imageFile) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;
-
+        this.user = user;
     }
 }
