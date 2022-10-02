@@ -6,6 +6,7 @@ import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ImageFile;
 
+import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.ImageFileRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;

@@ -8,6 +8,8 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static javax.persistence.GenerationType.SEQUENCE;
+
 @ToString
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class ShareItem {
     )
     @GeneratedValue(
             generator = "item_sequence",
-            strategy = GenerationType.SEQUENCE)
+            strategy = SEQUENCE)
     private Long itemId;
 
     @NotBlank
@@ -40,16 +42,29 @@ public class ShareItem {
     private LocalDateTime createTime;
 
     //A participant can contribute several items as lend-items, so many to one
-    @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(
+            name = "id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "shareitem_participant_id_fk"
+            )
+    )
     private Participant participant;
 
     //An item can have many loan actions, so one to many
     //Bidirectional relationship
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareItem")
-    private Set<LoanAction> loanList;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareItem")
+//    private Set<LoanAction> loanList;
 
-
-
-
+    public ShareItem(String itemName, String description, LocalDateTime createTime, Participant participant, Set<LoanAction> loanList) {
+        this.itemName = itemName;
+        this.description = description;
+        this.createTime = createTime;
+        this.participant = participant;
+    }
 }

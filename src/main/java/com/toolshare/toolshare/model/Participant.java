@@ -11,6 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @ToString
@@ -25,7 +28,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
                         columnNames = "email")
         }
 )
-
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -74,13 +77,47 @@ public class Participant {
     )
     private User user;
 
+    @OneToMany(
+            mappedBy = "participant",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<ShareItem> items = new ArrayList<>();
+
     public Participant() {
     }
-    public Participant(String email, String firstName, String lastName, String mobileNumber, User user, ImageFile imageFile) {
+
+    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber, User user, List<ShareItem> items) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.photoURL = photoURL;
         this.mobileNumber = mobileNumber;
         this.user = user;
+        this.items = items;
     }
+
+    public List<ShareItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ShareItem> items) {
+        this.items = items;
+    }
+
+//    public void addItem(ShareItem shareItem) {
+//        if (!this.items.contains(shareItem)) {
+//            this.items.add(shareItem);
+//            shareItem.setParticipant(this);
+//        }
+//    }
+
+    public void removeItem(ShareItem shareItem) {
+        if (this.items.contains(shareItem)) {
+            this.items.remove(shareItem);
+            shareItem.setParticipant(null);
+        }
+    }
+
 }

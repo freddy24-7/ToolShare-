@@ -34,6 +34,12 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
+    @Override
+    public List<ShareItem> findItemsOfParticipant(Long id) {
+        return itemRepository.findItemsOfParticipant(id);
+    }
+
+
 }
 
 

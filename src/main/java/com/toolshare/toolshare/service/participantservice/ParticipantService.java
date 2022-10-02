@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.service.participantservice;
 
 import com.toolshare.toolshare.model.Participant;
+import com.toolshare.toolshare.model.ShareItem;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface ParticipantService {
     Participant getParticipantById(Long id);
 
     Participant updateParticipant(Participant participant, Long id);
+
 
 
 }
