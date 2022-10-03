@@ -16,11 +16,7 @@ import java.util.List;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
-@ToString
-@Getter
-@Setter
-@EqualsAndHashCode
-@AllArgsConstructor
+@Data
 @Entity(name = "Participant")
 @Table(name = "participant",
         uniqueConstraints = {
@@ -85,26 +81,26 @@ public class Participant {
     )
     private List<ShareItem> items = new ArrayList<>();
 
-    public Participant() {
-    }
+//    public Participant() {
+//    }
 
-    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber, User user, List<ShareItem> items) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.photoURL = photoURL;
-        this.mobileNumber = mobileNumber;
-        this.user = user;
-        this.items = items;
-    }
+//    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber, User user, List<ShareItem> items) {
+//        this.email = email;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.photoURL = photoURL;
+//        this.mobileNumber = mobileNumber;
+//        this.user = user;
+//        this.items = items;
+//    }
 
-    public List<ShareItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ShareItem> items) {
-        this.items = items;
-    }
+//    public List<ShareItem> getItems() {
+//        return items;
+//    }
+//
+//    public void setItems(List<ShareItem> items) {
+//        this.items = items;
+//    }
 
 //    public void addItem(ShareItem shareItem) {
 //        if (!this.items.contains(shareItem)) {
@@ -113,11 +109,11 @@ public class Participant {
 //        }
 //    }
 
-    public void removeItem(ShareItem shareItem) {
-        if (this.items.contains(shareItem)) {
-            this.items.remove(shareItem);
-            shareItem.setParticipant(null);
-        }
-    }
+//    public void removeItem(ShareItem shareItem) {
+//        if (this.items.contains(shareItem)) {
+//            this.items.remove(shareItem);
+//            shareItem.setParticipant(null);
+//        }
+//    }
 
 }

@@ -3,7 +3,6 @@ package com.toolshare.toolshare.controller;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.service.itemservice.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class ItemController {
 
     @GetMapping
     public List<ShareItem> getItemsOfParticipant(Long id) {
-        return itemService.findItemsOfParticipant(id);
+        return itemService.findItemsOfParticipant();
     }
 
     @PostMapping

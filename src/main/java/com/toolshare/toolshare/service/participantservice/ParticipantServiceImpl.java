@@ -11,6 +11,7 @@ import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.repository.ImageFileRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.service.fileService.FileService;
+import com.toolshare.toolshare.service.itemservice.ItemService;
 import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,9 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private ItemService itemService;
+
     @Override
     public List<Participant> findAllParticipants() {
         return participantRepository.findAll();
@@ -47,6 +51,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public Participant saveParticipant(Participant participant) {
         participant.setUser(userService.getLoggedInUser());
+        participant.setItems(itemService.findItemsOfParticipant());
         Boolean existsEmail = Boolean.valueOf(participantRepository
                 .selectExistsEmail(participant.getEmail()));
 
