@@ -1,9 +1,5 @@
 package com.toolshare.toolshare.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
@@ -11,12 +7,17 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
-@Data
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "Participant")
 @Table(name = "participant",
         uniqueConstraints = {
@@ -24,7 +25,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
                         columnNames = "email")
         }
 )
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+
 public class Participant {
     @Id
     @SequenceGenerator(
@@ -58,7 +59,15 @@ public class Participant {
     @Pattern(regexp="^\\d{10}$", message="je mobiele nummer moet tien cijfers hebben")
     @Column(name="mobileNumber", nullable = false)
     private String mobileNumber;
-    //    TODO: RegEx for mobileNumber - NOW COMPLETED
+
+    //Note that these fields are needed in the constructor below, lombok takes care of no arg and all arg
+    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.photoURL = photoURL;
+        this.mobileNumber = mobileNumber;
+    }
 
     @OneToOne(
             cascade = CascadeType.ALL,
@@ -73,47 +82,13 @@ public class Participant {
     )
     private User user;
 
+    //One participant (class name Participant), and many items per participant
     @OneToMany(
-            mappedBy = "participant",
             orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY
     )
-    private List<ShareItem> items = new ArrayList<>();
-
-//    public Participant() {
-//    }
-
-//    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber, User user, List<ShareItem> items) {
-//        this.email = email;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.photoURL = photoURL;
-//        this.mobileNumber = mobileNumber;
-//        this.user = user;
-//        this.items = items;
-//    }
-
-//    public List<ShareItem> getItems() {
-//        return items;
-//    }
-//
-//    public void setItems(List<ShareItem> items) {
-//        this.items = items;
-//    }
-
-//    public void addItem(ShareItem shareItem) {
-//        if (!this.items.contains(shareItem)) {
-//            this.items.add(shareItem);
-//            shareItem.setParticipant(this);
-//        }
-//    }
-
-//    public void removeItem(ShareItem shareItem) {
-//        if (this.items.contains(shareItem)) {
-//            this.items.remove(shareItem);
-//            shareItem.setParticipant(null);
-//        }
-//    }
+    @JoinColumn(name = "participant_id")
+    private Set<ShareItem> items = new HashSet<>();
 
 }

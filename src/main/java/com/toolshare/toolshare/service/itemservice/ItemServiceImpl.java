@@ -1,11 +1,12 @@
 package com.toolshare.toolshare.service.itemservice;
 
+import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ItemRepository;
+import com.toolshare.toolshare.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,13 +15,8 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
-    @Override
-    public ShareItem saveItem(ShareItem shareItem)
-    {
-        shareItem.setCreateTime(LocalDateTime.now());
-
-        return itemRepository.save(shareItem);
-    }
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     @Override
     public void deleteItem(Long itemId)
@@ -35,10 +31,32 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ShareItem> findItemsOfParticipant() {
-        return itemRepository.findItemsOfParticipant();
+    public ShareItem getShareItemsById(Long itemId) {
+        ShareItem shareItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found ShareItem with id = " + itemId));
+        return shareItem;
     }
 
+    @Override
+    public ShareItem createShareItem(Long id, ShareItem shareItemAddition) {
+        //mapping through the participantobject to get all existing items before adding one to the
+        //items list
+        ShareItem shareItem = participantRepository.findById(id).map(participant -> {
+            participant.getItems().add(shareItemAddition);
+            return itemRepository.save(shareItemAddition);
+        }).orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
+        return shareItem;
+    }
+
+    @Override
+    public ShareItem updateShareItem(long itemId, ShareItem shareItemEdit) {
+        ShareItem itemUpdate = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("ShareItemId " + itemId + "not found"));
+        itemUpdate.setItemName(shareItemEdit.getItemName());
+        itemUpdate.setDescription(shareItemEdit.getDescription());
+        itemRepository.save(itemUpdate);
+        return itemUpdate;
+    }
 
 }
 

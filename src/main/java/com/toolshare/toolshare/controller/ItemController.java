@@ -1,7 +1,9 @@
 package com.toolshare.toolshare.controller;
 
+import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.service.itemservice.ItemService;
+import com.toolshare.toolshare.service.participantservice.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +19,49 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
-//    @GetMapping
-//    public List<ShareItem> getAllItems() {
-//        return itemService.findAllItems();
-//    }
+    @Autowired
+    private ParticipantService participantService;
 
-    @GetMapping
-    public List<ShareItem> getItemsOfParticipant(Long id) {
-        return itemService.findItemsOfParticipant();
+    @GetMapping("/items")
+    public List<ShareItem> getAllItems() {
+        return itemService.findAllItems();
     }
 
-    @PostMapping
-    public ResponseEntity<?> saveItem(@RequestBody ShareItem shareItem)
-    {
-        return new ResponseEntity<>(itemService.saveItem(shareItem), HttpStatus.CREATED);
+    @GetMapping("/items/{itemId}")
+    public ResponseEntity<ShareItem> getShareItemsById(@PathVariable(value = "itemId") Long itemId) {
+        ShareItem item = itemService.getShareItemsById(itemId);
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{itemId}")
-    public void deleteItem(
-            @PathVariable("itemId") Long itemId) {
+    @GetMapping("/participants/{id}/items")
+    public Participant getAllItemsByParticipantId(@PathVariable(value = "id") Long id) {
+
+        return participantService.getAllItemsByParticipantId(id);
+
+    }
+
+    @PostMapping("/participants/{id}/items")
+    public ShareItem createShareItem(@PathVariable(value = "id") Long id,
+                             @RequestBody ShareItem addShareItem) {
+    return itemService.createShareItem(id, addShareItem);
+    }
+
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<ShareItem> updateShareItem(@PathVariable("itemId") long itemId, @RequestBody ShareItem updateItem) {
+
+        return new ResponseEntity<>(itemService.updateShareItem(itemId, updateItem), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "{itemId}") public void deleteItem(@PathVariable("itemId") Long itemId) {
+
         itemService.deleteItem(itemId);
     }
 
+    @DeleteMapping("/participants/{id}/items")
+    public ResponseEntity<List<ShareItem>> deleteAllItemsOfParticipant(
+            @PathVariable(value = "id") Long id) {
+        participantService.deleteAllItemsOfParticipant(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

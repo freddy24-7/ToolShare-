@@ -4,26 +4,15 @@ import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
-import com.toolshare.toolshare.model.ImageFile;
 
 import com.toolshare.toolshare.model.ShareItem;
-import com.toolshare.toolshare.model.User;
-import com.toolshare.toolshare.repository.ImageFileRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
-import com.toolshare.toolshare.service.fileService.FileService;
-import com.toolshare.toolshare.service.itemservice.ItemService;
 import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
@@ -32,26 +21,20 @@ public class ParticipantServiceImpl implements ParticipantService {
     private ParticipantRepository participantRepository;
 
     @Autowired
-    private ImageFileRepository imageFileRepository;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private ItemService itemService;
 
     @Override
     public List<Participant> findAllParticipants() {
+
         return participantRepository.findAll();
     }
 
     @Override
     public Participant saveParticipant(Participant participant) {
+        //The below line is essential for finding the logged in user before saving the participant
+        //and all the attributes of the participant. Ensures referential integrity in the 1-1 relationship
+        //between user and participant
         participant.setUser(userService.getLoggedInUser());
-        participant.setItems(itemService.findItemsOfParticipant());
         Boolean existsEmail = Boolean.valueOf(participantRepository
                 .selectExistsEmail(participant.getEmail()));
 
@@ -64,22 +47,21 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public Participant findByLastName(String lastName) {
+
         return participantRepository.findByLastName(lastName);
     }
 
     @Override
-    public Participant deleteParticipant(Long id) {
+    public void deleteParticipant(Long id) {
         if (!participantRepository.existsById(id)) {
             throw new UserNotFoundException(
                     "Lid met id " + id + " bestaat niet");
         }
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         participantRepository.delete(participant);
-        return participant;
     }
 
-
-    //previous version did not return a requestbody (was void) so changing the put-method
+    //Earlier versions did not return a requestbody (was void) so changing the put-method
     //Using a ternary to check for existence of user, before changing values
     @Override
     public Participant updateParticipant(
@@ -94,16 +76,33 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
+    public void deleteAllItemsOfParticipant(Long participantId) {
+        Participant participant = participantRepository.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + participantId));
+        //Accessing the participant, getting all the items, then deleting them:
+        participant.getItems().clear();
+        participantRepository.save(participant);
+    }
+
+    @Override
+    public Participant getAllItemsByParticipantId(Long participantId) {
+        Participant Participant = participantRepository.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + participantId));
+        List<ShareItem> items = new ArrayList<ShareItem>();
+        items.addAll(Participant.getItems());
+
+        return Participant;
+    }
+
+    @Override
     public Participant getParticipantById(Long id) {
         if (!participantRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     "Lid met id " + id + " bestaat niet");
         }
-        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException())
-                ;
+        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         return participant;
     }
-
 
 }
 

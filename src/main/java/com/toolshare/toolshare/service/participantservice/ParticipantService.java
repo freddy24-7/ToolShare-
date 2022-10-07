@@ -1,11 +1,7 @@
 package com.toolshare.toolshare.service.participantservice;
 
 import com.toolshare.toolshare.model.Participant;
-import com.toolshare.toolshare.model.ShareItem;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-import java.util.Map;
 
 public interface ParticipantService {
 
@@ -15,12 +11,14 @@ public interface ParticipantService {
 
     Participant findByLastName(String lastName);
 
-    Participant deleteParticipant(Long id);
-
     Participant getParticipantById(Long id);
 
     Participant updateParticipant(Participant participant, Long id);
 
+    void deleteAllItemsOfParticipant(Long participantId);
 
+    Participant getAllItemsByParticipantId(Long id);
+
+    void deleteParticipant(Long id);
 
 }
