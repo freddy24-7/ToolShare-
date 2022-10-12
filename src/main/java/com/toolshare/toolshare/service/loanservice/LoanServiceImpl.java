@@ -26,8 +26,10 @@ public class LoanServiceImpl implements LoanService {
     public LoanAction saveLoanAction(Long id, LoanAction loanActionAddition) {
         //mapping through the participantobject to get all existing items before adding one to the
         //items list
+        loanActionAddition.setLoanTime(LocalDateTime.now());
         LoanAction loanAction = participantRepository.findById(id).map(participant -> {
             participant.getLoanActions().add(loanActionAddition);
+
             return loanRepository.save(loanActionAddition);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
         return loanAction;
