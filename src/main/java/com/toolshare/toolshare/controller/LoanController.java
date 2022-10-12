@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.LoanAction;
+import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.security.UserPrinciple;
 import com.toolshare.toolshare.service.loanservice.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,18 @@ public class LoanController {
     @Autowired
     private LoanService loanService;
 
-    @PostMapping
-    public ResponseEntity<?> saveLoan(@RequestBody LoanAction loanAction)
-    {
-        return new ResponseEntity<>(loanService.saveLoanAction(loanAction), HttpStatus.CREATED);
+//    @PostMapping("/participant/{id}")
+//    public ResponseEntity<?> saveLoan(@PathVariable Long id,
+//                                      @RequestBody LoanAction loanAction)
+//    {
+//        return new ResponseEntity<>(loanService.saveLoanAction(id, loanAction), HttpStatus.CREATED);
+//    }
+
+    @PostMapping("/participant/{id}")
+    public LoanAction saveLoanAction(@PathVariable Long id,
+                                     @RequestBody LoanAction addLoanAction) {
+        return loanService.saveLoanAction(id, addLoanAction);
+
     }
 
     @GetMapping

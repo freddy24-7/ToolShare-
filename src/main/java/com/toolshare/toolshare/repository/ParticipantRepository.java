@@ -11,8 +11,6 @@ public interface ParticipantRepository extends JpaRepository <Participant, Long>
     
     Participant findByLastName(String lastName);
 
-    Optional<Participant> findParticipantByEmail(String email);
-
     default String selectExistsEmail(String email) {
         return email;
     }

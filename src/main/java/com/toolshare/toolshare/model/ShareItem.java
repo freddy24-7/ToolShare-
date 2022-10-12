@@ -35,4 +35,8 @@ public class ShareItem {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @NotBlank
+    @Column(name="photoURL", nullable = false)
+    private String photoURL;
+
 }

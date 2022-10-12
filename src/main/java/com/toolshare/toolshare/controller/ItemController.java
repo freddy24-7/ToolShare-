@@ -28,38 +28,38 @@ public class ItemController {
     }
 
     @GetMapping("/items/{itemId}")
-    public ResponseEntity<ShareItem> getShareItemsById(@PathVariable(value = "itemId") Long itemId) {
+    public ResponseEntity<ShareItem> getShareItemsById(@PathVariable Long itemId) {
         ShareItem item = itemService.getShareItemsById(itemId);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @GetMapping("/participants/{id}/items")
-    public Participant getAllItemsByParticipantId(@PathVariable(value = "id") Long id) {
+    public Participant getAllItemsByParticipantId(@PathVariable Long id) {
 
         return participantService.getAllItemsByParticipantId(id);
 
     }
 
-    @PostMapping("/participants/{id}/items")
-    public ShareItem createShareItem(@PathVariable(value = "id") Long id,
+    @PostMapping("/participants/items/{id}")
+    public ShareItem createShareItem(@PathVariable Long id,
                              @RequestBody ShareItem addShareItem) {
     return itemService.createShareItem(id, addShareItem);
     }
 
     @PutMapping("/items/{itemId}")
-    public ResponseEntity<ShareItem> updateShareItem(@PathVariable("itemId") long itemId, @RequestBody ShareItem updateItem) {
+    public ResponseEntity<ShareItem> updateShareItem(@PathVariable long itemId, @RequestBody ShareItem updateItem) {
 
         return new ResponseEntity<>(itemService.updateShareItem(itemId, updateItem), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{itemId}") public void deleteItem(@PathVariable("itemId") Long itemId) {
+    @DeleteMapping(path = "{itemId}") public void deleteItem(@PathVariable Long itemId) {
 
         itemService.deleteItem(itemId);
     }
 
     @DeleteMapping("/participants/{id}/items")
     public ResponseEntity<List<ShareItem>> deleteAllItemsOfParticipant(
-            @PathVariable(value = "id") Long id) {
+            @PathVariable Long id) {
         participantService.deleteAllItemsOfParticipant(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

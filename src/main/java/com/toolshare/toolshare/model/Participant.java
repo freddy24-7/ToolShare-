@@ -91,4 +91,13 @@ public class Participant {
     @JoinColumn(name = "participant_id")
     private Set<ShareItem> items = new HashSet<>();
 
+    //One participant (class name Participant), and many loanActions per participant
+    @OneToMany(
+            orphanRemoval = true,
+            cascade = {CascadeType.ALL},
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "participant_id")
+    private Set<LoanAction> loanActions = new HashSet<>();
+
 }

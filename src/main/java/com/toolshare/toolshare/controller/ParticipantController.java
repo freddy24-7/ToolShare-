@@ -42,7 +42,7 @@ public class ParticipantController {
 
     @DeleteMapping(path = "/participants/{id}")
     public void deleteParticipant(
-            @PathVariable("id") Long id) {
+            @PathVariable Long id) {
         participantService.deleteParticipant(id);
     }
 
