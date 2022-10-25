@@ -33,7 +33,7 @@ public class ItemController {
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
-    @GetMapping("/participants/{id}/items")
+    @GetMapping("/participants/items/{id}")
     public Participant getAllItemsByParticipantId(@PathVariable Long id) {
 
         return participantService.getAllItemsByParticipantId(id);

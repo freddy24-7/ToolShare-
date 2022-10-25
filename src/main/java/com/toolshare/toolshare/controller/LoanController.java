@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.controller;
 
 import com.toolshare.toolshare.model.LoanAction;
+import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.security.UserPrinciple;
 import com.toolshare.toolshare.service.loanservice.LoanService;
@@ -31,10 +32,13 @@ public class LoanController {
 
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllLoansOfUser(@AuthenticationPrincipal UserPrinciple userPrinciple)
-    {
-        return ResponseEntity.ok(loanService.findLoanItemsOfParticipant(userPrinciple.getId()));
+    @GetMapping("/participants/loaninterest/{id}")
+    public Participant getLoanActionById(@PathVariable Long id) {
+
+        return loanService.getLoanActionById(id);
+
     }
+
+
 
 }

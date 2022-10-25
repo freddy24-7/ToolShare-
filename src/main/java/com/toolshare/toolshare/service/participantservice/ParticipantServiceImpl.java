@@ -6,8 +6,10 @@ import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
 
 import com.toolshare.toolshare.model.ShareItem;
+import com.toolshare.toolshare.repository.ItemRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.service.securityservice.UserService;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Autowired
     private ParticipantRepository participantRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     @Autowired
     private UserService userService;
@@ -103,6 +108,8 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         return participant;
     }
+
+
 
 }
 

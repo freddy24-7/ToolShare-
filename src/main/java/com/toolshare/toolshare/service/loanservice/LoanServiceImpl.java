@@ -2,14 +2,14 @@ package com.toolshare.toolshare.service.loanservice;
 
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.LoanAction;
-import com.toolshare.toolshare.model.ShareItem;
+import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.repository.LoanRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
-import com.toolshare.toolshare.repository.projection.LoanItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,8 +35,13 @@ public class LoanServiceImpl implements LoanService {
         return loanAction;
     }
 
-    public List<LoanItem> findLoanItemsOfParticipant(Long id) {
-        return loanRepository.findAllLoansOfUser(id);
+    @Override
+    public Participant getLoanActionById(Long id) {
+        Participant Participant = participantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
+        List<LoanAction> loanActions = new ArrayList<LoanAction>();
+        loanActions.addAll(Participant.getLoanActions());
+        return Participant;
     }
 
 }
