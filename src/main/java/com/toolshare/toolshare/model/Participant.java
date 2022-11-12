@@ -52,7 +52,8 @@ public class Participant {
     @Column(name="lastname", nullable = false)
     private String lastName;
 
-    @Column(name="photoURL")
+    @NotBlank
+    @Column(name="photoURL", nullable = false)
     private String photoURL;
 
     @NotBlank
