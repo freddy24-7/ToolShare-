@@ -10,8 +10,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    //This method is used in the service class to identify which "user" a "participant" corresponds to
     Optional<User> findByUsername(String username);
 
+    //This method allows an administrator to update roles
     @Modifying
     @Query("update User set role = :role where username = :username")
     void updateUserRole(@Param("username") String username, @Param("role")Role role);

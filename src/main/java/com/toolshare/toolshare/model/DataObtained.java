@@ -3,12 +3,8 @@ package com.toolshare.toolshare.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-//This class specifies data to be received as files are uploaded
+//This class specifies data to be received when files are uploaded
 
 @Data
 @NoArgsConstructor
@@ -16,6 +12,7 @@ import javax.persistence.Id;
 
 public class DataObtained {
 
+    //Defining the variables
     private String fileName;
     private String downloadURL;
     private String fileType;

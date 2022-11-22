@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
+
+    //Autowiring the service classes where the business logic takes place
     @Autowired
     private AuthenticationService authenticationService;
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("sign-up")//api/authentication/sign-up
+    //Post mapping for sign-up. Here we check that user name is not already taken,
+    //and return an error to the frontend if that is the case
+    @PostMapping("sign-up")
     public ResponseEntity<?> signUp(@RequestBody User user)
     {
         if (userService.findByUsername(user.getUsername()).isPresent())
@@ -28,6 +32,8 @@ public class AuthenticationController {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
+    //Here we are authenticating a registered user trying to log in, and returning a JWT token
+    //token is valid until the user logs out - or to a max of 24 hours (specified under application.properties)
     @PostMapping("sign-in")//api/authentication/sign-in
     public ResponseEntity<?> signIn(@RequestBody User user)
     {

@@ -1,7 +1,7 @@
 package com.toolshare.toolshare.security.jwt;
 
 import com.toolshare.toolshare.security.UserPrinciple;
-import com.toolshare.toolshare.utils.SecurityUtils;
+import com.toolshare.toolshare.security.utils.SecurityUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

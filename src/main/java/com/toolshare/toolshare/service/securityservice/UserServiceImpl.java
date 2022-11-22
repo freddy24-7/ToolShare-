@@ -1,6 +1,5 @@
 package com.toolshare.toolshare.service.securityservice;
 
-import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.repository.UserRepository;
@@ -15,11 +14,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class UserServiceImpl implements UserService {
+
+    //Importing  user repository and instantiating
+
     private final UserRepository userRepository;
 
+    //Defining password-encoder variable
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    //CRUD operations on user
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -52,12 +55,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+
+    //Using spring security to obtain the current logged in user.
     @Override
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
-
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

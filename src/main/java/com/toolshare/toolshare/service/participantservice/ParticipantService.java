@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface ParticipantService {
 
+    //Interface for handling participants
+
     List<Participant> findAllParticipants();
 
     Participant saveParticipant(Participant participant);

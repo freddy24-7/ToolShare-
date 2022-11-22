@@ -19,11 +19,10 @@ import java.util.List;
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
 
-    @Autowired
-    private ParticipantRepository participantRepository;
+    //Importing required repositories and instantiating
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ParticipantRepository participantRepository;
 
     @Autowired
     private UserService userService;
@@ -34,6 +33,8 @@ public class ParticipantServiceImpl implements ParticipantService {
         return participantRepository.findAll();
     }
 
+    //Below is business logic for CRUD operations and additional operations pertaining to participants
+
     @Override
     public Participant saveParticipant(Participant participant) {
         //The below line is essential for finding the logged in user before saving the participant
@@ -42,7 +43,6 @@ public class ParticipantServiceImpl implements ParticipantService {
         participant.setUser(userService.getLoggedInUser());
         Boolean existsEmail = Boolean.valueOf(participantRepository
                 .selectExistsEmail(participant.getEmail()));
-
         if (existsEmail) {
             throw new BadRequestException(
                     "Email " + participant.getEmail() + " bestaat al");
@@ -52,7 +52,6 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public Participant findByLastName(String lastName) {
-
         return participantRepository.findByLastName(lastName);
     }
 
@@ -108,8 +107,6 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         return participant;
     }
-
-
 
 }
 

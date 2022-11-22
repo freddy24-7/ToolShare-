@@ -15,16 +15,19 @@ import java.util.List;
 @Service
 public class LoanServiceImpl implements LoanService {
 
+    //Importing required repositories and instantiating
+
     @Autowired
     private LoanRepository loanRepository;
 
     @Autowired
     private ParticipantRepository participantRepository;
 
+    //Below is business logic for saving and getting "LoanActions"
 
     @Override
     public LoanAction saveLoanAction(Long id, LoanAction loanActionAddition) {
-        //mapping through the participantobject to get all existing items before adding one to the
+        //mapping through the participant-object to get all existing items before adding one to the
         //items list
         loanActionAddition.setLoanTime(LocalDateTime.now());
         LoanAction loanAction = participantRepository.findById(id).map(participant -> {

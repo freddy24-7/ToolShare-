@@ -12,11 +12,15 @@ import java.util.List;
 @Service
 public class ItemServiceImpl implements ItemService {
 
+    //Importing required repositories and instantiating
+
     @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
     private ParticipantRepository participantRepository;
+
+    //Below is business logic for deleting, finding, saving and updating ShareItems
 
     @Override
     public void deleteItem(Long itemId)

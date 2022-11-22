@@ -1,4 +1,4 @@
-package com.toolshare.toolshare.utils;
+package com.toolshare.toolshare.security.utils;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;

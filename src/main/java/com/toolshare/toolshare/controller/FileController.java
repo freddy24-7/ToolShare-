@@ -6,6 +6,7 @@ package com.toolshare.toolshare.controller;
 import com.toolshare.toolshare.model.DataObtained;
 import com.toolshare.toolshare.model.ImageFile;
 import com.toolshare.toolshare.service.fileService.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,12 +20,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("")
 public class FileController {
 
+    //Autowiring the service class where the business logic takes place
+    @Autowired
     private FileService fileService;
 
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
-    }
-
+    //Here the image-file chosen by the user is uploaded and saved, and a Url is returned.
+    //The Url can be used to download the file in a UI
     @PostMapping("api/imagefile/upload")
     public DataObtained uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         ImageFile imageFile = null;
@@ -39,9 +40,9 @@ public class FileController {
                 file.getContentType(),
                 file.getSize()
         );
-
     }
 
+    //GetMapping for accessing the uploaded file and downloading it into the UI
     @GetMapping("download/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) throws Exception {
         ImageFile imageFile = null;
@@ -54,5 +55,4 @@ public class FileController {
                 .body(new ByteArrayResource(imageFile.getData()));
 
     }
-
 }

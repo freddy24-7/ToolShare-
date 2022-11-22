@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface ItemService {
 
+    //Interface for handling items to be shared among participants
+
     void deleteItem(Long itemId);
 
     List<ShareItem> findAllItems();
