@@ -6,11 +6,14 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 
 public class SecurityUtils {
+
+    //Defining authentication constants
     public static final String ROLE_PREFIX = "ROLE_";
     public static final String AUTH_HEADER = "authorization";
     public static final String AUTH_TOKEN_TYPE = "Bearer";
     public static final String AUTH_TOKEN_PREFIX = AUTH_TOKEN_TYPE + " ";
 
+    //Defining authority based on role
     public static SimpleGrantedAuthority convertToAuthority(String role)
     {
         String formattedRole = role.startsWith(ROLE_PREFIX) ? role : ROLE_PREFIX + role;
@@ -18,6 +21,7 @@ public class SecurityUtils {
         return new SimpleGrantedAuthority(formattedRole);
     }
 
+    //Defining JWT as bearerToken
     public static String extractAuthTokenFromRequest(HttpServletRequest request)
     {
         String bearerToken = request.getHeader(AUTH_HEADER);

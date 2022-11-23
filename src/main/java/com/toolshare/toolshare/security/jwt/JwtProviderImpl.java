@@ -23,21 +23,24 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtProviderImpl implements JwtProvider {
+
+    //Calling JWT properties with value annotation
     @Value("${app.jwt.secret}")
     private String JWT_SECRET;
 
     @Value("${app.jwt.expiration-in-ms}")
     private Long JWT_EXPIRATION_IN_MS;
 
+    //Generating token, using UserPrinciple created at login
     @Override
     public String generateToken(UserPrinciple auth)
     {
         String authorities = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
         Key key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
 
+        //creating json token, encompassing various user properties, adding signature algorithm
         return Jwts.builder()
                 .setSubject(auth.getUsername())
                 .claim("roles", authorities)
@@ -47,29 +50,25 @@ public class JwtProviderImpl implements JwtProvider {
                 .compact();
     }
 
+    //Getting token, extracting token-value from HTTP-request
     @Override
     public Authentication getAuthentication(HttpServletRequest request)
     {
         Claims claims = extractClaims(request);
-
         if (claims == null)
         {
             return null;
         }
-
         String username = claims.getSubject();
         Long userId = claims.get("userId", Long.class);
-
         Set<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
                 .map(SecurityUtils::convertToAuthority)
                 .collect(Collectors.toSet());
-
         UserDetails userDetails = UserPrinciple.builder()
                 .username(username)
                 .authorities(authorities)
                 .id(userId)
                 .build();
-
         if (username == null)
         {
             return null;
@@ -77,16 +76,15 @@ public class JwtProviderImpl implements JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
     }
 
+    //Checking token validity, checking expiration date
     @Override
     public boolean isTokenValid(HttpServletRequest request)
     {
         Claims claims = extractClaims(request);
-
         if (claims == null)
         {
             return false;
         }
-
         if (claims.getExpiration().before(new Date()))
         {
             return false;
@@ -94,17 +92,15 @@ public class JwtProviderImpl implements JwtProvider {
         return true;
     }
 
+    //Extracting claims using method defined in SecurityUtils class
     private Claims extractClaims(HttpServletRequest request)
     {
         String token = SecurityUtils.extractAuthTokenFromRequest(request);
-
         if (token == null)
         {
             return null;
         }
-
         Key key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
-
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

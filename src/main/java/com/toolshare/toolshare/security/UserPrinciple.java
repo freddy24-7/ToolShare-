@@ -11,11 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
+//This class implements a range of abstract methods from the UserDetails class in spring security
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserPrinciple implements UserDetails {
+
     private Long id;
     private String username;
     transient private String password;
