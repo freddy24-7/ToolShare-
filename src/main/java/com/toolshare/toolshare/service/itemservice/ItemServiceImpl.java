@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ShareItem getShareItemsById(Long itemId) {
         ShareItem shareItem = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found ShareItem with id = " + itemId));
+                .orElseThrow(() -> new ResourceNotFoundException("ShareItem niet gevonden met id = " + itemId));
         return shareItem;
     }
 
@@ -48,14 +48,14 @@ public class ItemServiceImpl implements ItemService {
         ShareItem shareItem = participantRepository.findById(id).map(participant -> {
             participant.getItems().add(shareItemAddition);
             return itemRepository.save(shareItemAddition);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id " + id));
         return shareItem;
     }
 
     @Override
     public ShareItem updateShareItem(long itemId, ShareItem shareItemEdit) {
         ShareItem itemUpdate = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResourceNotFoundException("ShareItemId " + itemId + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("ShareItemId " + itemId + "niet gevonden"));
         itemUpdate.setItemName(shareItemEdit.getItemName());
         itemUpdate.setDescription(shareItemEdit.getDescription());
         itemRepository.save(itemUpdate);

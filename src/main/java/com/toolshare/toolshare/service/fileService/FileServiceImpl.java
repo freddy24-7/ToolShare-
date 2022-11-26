@@ -20,7 +20,7 @@ public class FileServiceImpl implements FileService {
         String fileName = StringUtils.cleanPath((file.getOriginalFilename()));
         try {
             if(fileName.contains("..")) {
-                throw  new Exception("Filename contains invalid path sequence "
+                throw  new Exception("Bestandsnaam bevat ongeldige padvolgorde "
                         + fileName);
             }
             ImageFile imageFile
@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
                     file.getBytes());
             return imageFileRepository.save(imageFile);
         } catch (Exception e) {
-            throw new Exception("Could not save File: " + fileName);
+            throw new Exception("Kon bestand niet opslaan: " + fileName);
         }
     }
 
@@ -38,6 +38,6 @@ public class FileServiceImpl implements FileService {
     public ImageFile getImageFile(String fileId) throws Exception {
         return imageFileRepository
                 .findById(fileId)
-                .orElseThrow(() -> new Exception("File not found with Id: " + fileId));
+                .orElseThrow(() -> new Exception("Bestand niet gevonden met id: " + fileId));
     }
 }

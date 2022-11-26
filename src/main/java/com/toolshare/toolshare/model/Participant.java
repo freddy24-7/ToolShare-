@@ -58,6 +58,13 @@ public class Participant {
     @Column(name="lastname", nullable = false)
     private String lastName;
 
+    //Defining postCode, using regex to define valid patten (including the letter codes not used in the Netherlands)
+    //Valid pattern does not guarantee the existence of a postcode, more info on this under "constants" in front-end
+    @NotBlank
+    @Pattern(regexp="^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)([A-Z]{2}$|[a-z]{2}$)", message="U moet een geldige postcode invoeren")
+    @Column(name="postcode", nullable = false)
+    private String postCode;
+
     //Defining photo url, making it non-nullable
     @NotBlank
     @Column(name="photoURL", nullable = false)

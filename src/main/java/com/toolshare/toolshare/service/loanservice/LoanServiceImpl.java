@@ -34,14 +34,14 @@ public class LoanServiceImpl implements LoanService {
             participant.getLoanActions().add(loanActionAddition);
 
             return loanRepository.save(loanActionAddition);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + id));
         return loanAction;
     }
 
     @Override
     public Participant getLoanActionById(Long id) {
         Participant Participant = participantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + id));
         List<LoanAction> loanActions = new ArrayList<LoanAction>();
         loanActions.addAll(Participant.getLoanActions());
         return Participant;

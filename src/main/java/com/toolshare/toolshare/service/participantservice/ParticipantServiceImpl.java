@@ -59,7 +59,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     public void deleteParticipant(Long id) {
         if (!participantRepository.existsById(id)) {
             throw new UserNotFoundException(
-                    "Lid met id " + id + " bestaat niet");
+                    "Deelnemer met id " + id + " bestaat niet");
         }
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         participantRepository.delete(participant);
@@ -74,6 +74,8 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant currenParticipant = getParticipantById(id);
         currenParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currenParticipant.getFirstName());
         currenParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currenParticipant.getLastName());
+        currenParticipant.setEmail(participant.getPostCode() != null ? participant.getPostCode() : currenParticipant.getPostCode());
+        currenParticipant.setEmail(participant.getPhotoURL() != null ? participant.getPhotoURL() : currenParticipant.getPhotoURL());
         currenParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currenParticipant.getEmail());
         currenParticipant.setMobileNumber(participant.getMobileNumber() != null ? participant.getMobileNumber() : currenParticipant.getMobileNumber());
         return participantRepository.save(currenParticipant);
@@ -82,7 +84,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public void deleteAllItemsOfParticipant(Long participantId) {
         Participant participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + participantId));
+                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + participantId));
         //Accessing the participant, getting all the items, then deleting them:
         participant.getItems().clear();
         participantRepository.save(participant);
@@ -91,7 +93,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public Participant getAllItemsByParticipantId(Long participantId) {
         Participant Participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Participant with id = " + participantId));
+                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + participantId));
         List<ShareItem> items = new ArrayList<ShareItem>();
         items.addAll(Participant.getItems());
 
@@ -102,7 +104,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     public Participant getParticipantById(Long id) {
         if (!participantRepository.existsById(id)) {
             throw new ResourceNotFoundException(
-                    "Lid met id " + id + " bestaat niet");
+                    "Deelnemer met id " + id + " bestaat niet");
         }
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         return participant;
