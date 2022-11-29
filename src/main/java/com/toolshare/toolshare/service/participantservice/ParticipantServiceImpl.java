@@ -74,8 +74,8 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant currenParticipant = getParticipantById(id);
         currenParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currenParticipant.getFirstName());
         currenParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currenParticipant.getLastName());
-        currenParticipant.setEmail(participant.getPostCode() != null ? participant.getPostCode() : currenParticipant.getPostCode());
-        currenParticipant.setEmail(participant.getPhotoURL() != null ? participant.getPhotoURL() : currenParticipant.getPhotoURL());
+        currenParticipant.setPostcode(participant.getPostcode() != null ? participant.getPostcode() : currenParticipant.getPostcode());
+        currenParticipant.setPhotoURL(participant.getPhotoURL() != null ? participant.getPhotoURL() : currenParticipant.getPhotoURL());
         currenParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currenParticipant.getEmail());
         currenParticipant.setMobileNumber(participant.getMobileNumber() != null ? participant.getMobileNumber() : currenParticipant.getMobileNumber());
         return participantRepository.save(currenParticipant);
