@@ -18,11 +18,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     //Importing  user repository and instantiating
-
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     //Defining password-encoder variable
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -35,7 +34,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         user.setCreateTime(LocalDateTime.now());
-
         return userRepository.save(user);
     }
 
@@ -54,7 +52,6 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
-
 
     //Using spring security to obtain the current logged in user.
     @Override
