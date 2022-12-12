@@ -10,17 +10,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -28,19 +28,6 @@ class ParticipantServiceImplTest {
 
     @Mock
     private ParticipantRepository participantRepository;
-
-    //Saving participant is a complex method as it requires us to find the logged in user
-    //We are here using tool to mock the logged-in user
-
-    //Mocking the controller layer
-    @Autowired
-    private MockMvc mockMvc;
-
-    //Building mockMvc
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(underTest).build();
-    }
 
     //Injecting the test class
     @InjectMocks
@@ -50,11 +37,13 @@ class ParticipantServiceImplTest {
     @Mock
     private UserServiceImpl userService;
 
-    @Test
-    void shouldSaveParticipantToDatabase() throws Exception {
-        //Arrange
-        mockMvc.perform(formLogin());
-        Participant funnyParticipant = new Participant();
+    //reference variables used for a variety of the below tests
+    private Participant funnyParticipant;
+    private Participant topParticipant;
+
+    @BeforeEach
+    void init() {
+        funnyParticipant = new Participant();
         funnyParticipant.setId(1L);
         funnyParticipant.setFirstName("tom");
         funnyParticipant.setLastName("hansen");
@@ -62,6 +51,21 @@ class ParticipantServiceImplTest {
         funnyParticipant.setEmail("tom@myphoto.com");
         funnyParticipant.setPostcode("3456HW");
         funnyParticipant.setMobileNumber("0909546543");
+
+        topParticipant = new Participant();
+        topParticipant.setId(2L);
+        topParticipant.setFirstName("tommy");
+        topParticipant.setLastName("Smith");
+        topParticipant.setPhotoURL("allphoto.com");
+        topParticipant.setEmail("smith@gmail.com.com");
+        topParticipant.setPostcode("3489AA");
+        topParticipant.setMobileNumber("0909878732");
+    }
+
+    @Test
+    void shouldSaveParticipantToDatabase() {
+        //Arrange
+        //Reference variables are created above, rule 41 to 63
         //Act
         when(participantRepository.save(any(Participant.class))).thenReturn(funnyParticipant);
         Participant newParticipant = underTest.saveParticipant(funnyParticipant);
@@ -71,18 +75,50 @@ class ParticipantServiceImplTest {
     }
 
     @Test
+    void shouldFindAllParticipants() throws Exception {
+        //Reference variables are created above, rule 41 to 63
+        //Arrange
+        List<Participant> participantList = new ArrayList<>();
+        participantList.add(funnyParticipant);
+        participantList.add(topParticipant);
+        //Act
+        when(participantRepository.findAll()).thenReturn(participantList);
+        List<Participant> participants = underTest.findAllParticipants();
+        //Assert
+        assertEquals(2, participants.size());
+        assertNotNull(participants);
+    }
+
+    @Test
     @Disabled
     void findByLastName() {
     }
 
     @Test
-    @Disabled
-    void deleteParticipant() {
+    void shouldDeleteParticipant() {
+        //Arrange
+        //Reference variables are created above, rule 41 to 63
+        //Act
+        when(participantRepository.findById(anyLong())).thenReturn(Optional.of(topParticipant));
+        doNothing().when(participantRepository).delete(any(Participant.class));
+        underTest.deleteParticipant(2L);
+        //Assert
+        verify(participantRepository, times(1)).delete(topParticipant);
+
     }
 
     @Test
-    @Disabled
-    void updateParticipant() {
+    void shouldUpdateParticipantAndSaveToDatabase() {
+        //Arrange
+        //Reference variables are created above, rule 41 to 63
+        //Act
+        when(participantRepository.findById(anyLong())).thenReturn(Optional.of(topParticipant));
+        when(participantRepository.save(any(Participant.class))).thenReturn(topParticipant);
+        topParticipant.setFirstName("Edgar");
+        Participant updatedParticipant = underTest.updateParticipant(topParticipant, 2L);
+        //Assert
+        assertNotNull(updatedParticipant);
+        assertEquals("Edgar", updatedParticipant.getFirstName());
     }
 
     @Test
@@ -96,9 +132,27 @@ class ParticipantServiceImplTest {
     }
 
     @Test
-    @Disabled
-    void getParticipantById() {
+    void shouldGetAParticipantById() {
+        //Arrange
+        //Reference variables are created above, rule 41 to 63
+        //Act
+        when(participantRepository.findById(anyLong())).thenReturn(Optional.of(topParticipant));
+        Participant oneMoreParticipant = underTest.getParticipantById(2L);
+        //Assert
+        assertNotNull(oneMoreParticipant);
+        assertThat(oneMoreParticipant.getId()).isEqualTo(2L);
     }
 
+    @Test
+    void shouldThrowExceptionWhenWrongIdCalled() {
+        //Arrange
+        //Reference variables are created above, rule 41 to 63
+        //Act
+        when(participantRepository.findById(2L)).thenReturn(Optional.of(topParticipant));
+        //Assert
+        assertThrows(RuntimeException.class, () -> {
+            underTest.getParticipantById(1L);
+        });
+    }
 
 }

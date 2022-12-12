@@ -26,6 +26,7 @@ class ParticipantRepositoryTest {
                 email,
                 "tommy",
                 "hansen",
+                "3543HT",
                 "myphto@webmail.com",
                 "0909878743"
         );

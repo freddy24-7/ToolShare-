@@ -2,14 +2,12 @@ package com.toolshare.toolshare.service.participantservice;
 
 import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
-import com.toolshare.toolshare.exception.UserNotFoundException;
 import com.toolshare.toolshare.model.Participant;
 
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.service.securityservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,10 +55,6 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public void deleteParticipant(Long id) {
-        if (!participantRepository.existsById(id)) {
-            throw new UserNotFoundException(
-                    "Deelnemer met id " + id + " bestaat niet");
-        }
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         participantRepository.delete(participant);
     }
@@ -102,10 +96,6 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public Participant getParticipantById(Long id) {
-        if (!participantRepository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Deelnemer met id " + id + " bestaat niet");
-        }
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
         return participant;
     }

@@ -1,6 +1,7 @@
 package com.toolshare.toolshare.service.itemservice;
 
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
+import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ItemRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
@@ -23,9 +24,9 @@ public class ItemServiceImpl implements ItemService {
     //Below is business logic for deleting, finding, saving and updating ShareItems
 
     @Override
-    public void deleteItem(Long itemId)
-    {
-        itemRepository.deleteById(itemId);
+    public void deleteItem(Long itemId) {
+        ShareItem shareItem = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException());
+        itemRepository.delete(shareItem);
     }
 
     @Override

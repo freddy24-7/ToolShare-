@@ -79,10 +79,13 @@ public class Participant {
 
     //Defining one extra constructor - with all variables except the id
     //Note that these fields are needed in the constructor below, lombok takes care of no arg and all arg
-    public Participant(String email, String firstName, String lastName, String photoURL, String mobileNumber) {
+
+
+    public Participant(String email, String firstName, String lastName, String postcode, String photoURL, String mobileNumber) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.postcode = postcode;
         this.photoURL = photoURL;
         this.mobileNumber = mobileNumber;
     }
