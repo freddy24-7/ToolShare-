@@ -27,7 +27,7 @@ public class UserController {
     }
 
     //PutMapping to allow an administrator to change the role of a user in the application
-    @PutMapping("change/{role}")//api/user/change/{role}
+    @PutMapping("change/{role}")
     public ResponseEntity<?> changeRole(@AuthenticationPrincipal UserPrinciple userPrinciple, @PathVariable Role role) {
         userService.changeRole(role, userPrinciple.getUsername());
 
