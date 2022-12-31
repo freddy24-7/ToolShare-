@@ -5,7 +5,6 @@ import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.security.CustomUserDetailsService;
 import com.toolshare.toolshare.security.jwt.JwtProviderImpl;
 import com.toolshare.toolshare.service.participantservice.ParticipantServiceImpl;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,13 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //Setting up the controller-class that is being tested
@@ -59,7 +56,7 @@ class ParticipantControllerTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
 
         Participant topParticipant = new Participant();
@@ -68,7 +65,7 @@ class ParticipantControllerTest {
         topParticipant.setLastName("Smith");
         topParticipant.setPhotoURL("allphoto.com");
         topParticipant.setEmail("smith@gmail.com.com");
-        topParticipant.setPostcode("3489AA");
+        topParticipant.setPostcode("3543AA");
         topParticipant.setMobileNumber("0909878732");
 
         List<Participant> participantList = new ArrayList<>();
@@ -91,7 +88,7 @@ class ParticipantControllerTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         //Act & stubbing the method
         when(participantService.getParticipantById(anyLong())).thenReturn(funnyParticipant);
@@ -110,7 +107,7 @@ class ParticipantControllerTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         //Act - and stub method
         when(participantService.saveParticipant(any(Participant.class))).thenReturn(funnyParticipant);
@@ -131,7 +128,7 @@ class ParticipantControllerTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         //Act - and stub method
         when(participantService.updateParticipant(any(Participant.class), anyLong())).thenReturn(funnyParticipant);
@@ -153,7 +150,7 @@ class ParticipantControllerTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         //Act
         doNothing().when(participantService).deleteParticipant(anyLong());

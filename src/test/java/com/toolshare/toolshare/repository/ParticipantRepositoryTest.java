@@ -43,7 +43,7 @@ class ParticipantRepositoryTest {
         funnyParticipant.setFirstName("tom");
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         //Act
         Participant newParticipant = underTest.save(funnyParticipant);
@@ -61,7 +61,7 @@ class ParticipantRepositoryTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
+        funnyParticipant.setPostcode("3543HW");
         funnyParticipant.setMobileNumber("0909546543");
         underTest.save(funnyParticipant);
 

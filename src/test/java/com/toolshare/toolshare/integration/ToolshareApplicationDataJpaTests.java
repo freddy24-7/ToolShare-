@@ -22,7 +22,7 @@ class ToolshareApplicationDataJpaTests {
 					"manfred@gmail.com",
 					"tom",
 					"hansen",
-					"3544HT",
+					"3543HT",
 					"www.photoMe.com",
 					"0909087876"));
 			long countAfter = participantRepository.count();
