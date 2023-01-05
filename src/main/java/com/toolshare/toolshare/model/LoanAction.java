@@ -28,8 +28,8 @@ public class LoanAction {
 
 
     //Defining foreign-key relationship to itemId (mapping done in ShareItem class)
-//    @Column(name = "item_id", nullable = false)
-//    private Long itemId;
+    @Column(name = "item_id", nullable = false)
+    private Long itemId;
 
     //Defining time variable
     @Column(name = "loanTime", nullable = false)
