@@ -60,4 +60,5 @@ public class ShareItem {
     @JoinColumn(name = "item_id")
     private Set<LoanAction> loanActions = new HashSet<>();
 
+
 }
