@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -45,7 +46,7 @@ public class ParticipantController {
 
     //PutMapping to allow the participant to modify his or her details
     @PutMapping(path = "/participants/{id}")
-    public ResponseEntity<Participant> updateParticipant(@RequestBody Participant participant,
+    public ResponseEntity<Participant> updateParticipant(@Valid @RequestBody Participant participant,
                                                          @PathVariable Long id) {
         return new ResponseEntity<Participant>(participantService.updateParticipant(participant, id), HttpStatus.OK);
     }

@@ -26,13 +26,12 @@ public class LoanAction {
             strategy = GenerationType.SEQUENCE)
     private Long loanId;
 
-
     //Defining foreign-key relationship to itemId (mapping done in ShareItem class)
-    @Column(name = "item_id", nullable = false)
+    @Column(name = "item_id")
     private Long itemId;
 
     //Defining time variable
-    @Column(name = "loanTime", nullable = false)
+    @Column(name = "loanTime")
     private LocalDateTime loanTime;
 
 }
