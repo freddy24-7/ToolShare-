@@ -106,14 +106,15 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
-	<profile>
-		<id>prod</id>
-		<properties>
-			<spring.profiles.active>prod</spring.profiles.active>
-		</properties>
-	</profile>
-	</profiles>
+<!--	The below properties are used for production-->
+<!--	<profiles>-->
+<!--	<profile>-->
+<!--		<id>prod</id>-->
+<!--		<properties>-->
+<!--			<spring.profiles.active>prod</spring.profiles.active>-->
+<!--		</properties>-->
+<!--	</profile>-->
+<!--	</profiles>-->
 
 	<build>
 		<plugins>
