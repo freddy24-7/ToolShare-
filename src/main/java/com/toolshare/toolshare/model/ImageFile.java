@@ -1,40 +1,64 @@
+
 package com.toolshare.toolshare.model;
 
-
-//Using lombok to avoid boilerplate code for getters, setters, constructors, ToString
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 
 @Data
 @NoArgsConstructor
 @Entity(name = "ImageFile")
-@Table(name = "imagefile"
-)
+@Table(name = "imagefile")
 public class ImageFile {
 
+    /**
+     * The unique identifier for the ImageFile object.
+     */
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id")
     private String id;
 
-    //Defining the variables of the image-upload class
+    /**
+     * The name of the uploaded image file.
+     */
+    @Column(name = "file_name")
     private String fileName;
+
+    /**
+     * The file type of the uploaded image file.
+     */
+    @Column(name = "file_type")
     private String fileType;
 
-    //Defining Lob - large object type - for the data that is the image file
+    /**
+     * The byte array of the uploaded image file.
+     */
     @Lob
     private byte[] data;
 
-
-    //Defining one extra constructor - with all variables except the id
-    public ImageFile(String fileName, String fileType, byte[] data) {
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.data = data;
+    /**
+     * Creates a new ImageFile object with the given
+     * file name, file type, and data.
+     *
+     * @param imageFileName The name of the uploaded image file.
+     * @param imageFileType The file type of the uploaded image file.
+     * @param imageData The byte array of the uploaded image file.
+     */
+    public ImageFile(
+            final String imageFileName,
+            final String imageFileType,
+            final byte[] imageData) {
+        this.fileName = imageFileName;
+        this.fileType = imageFileType;
+        this.data = imageData;
     }
-
-
 }

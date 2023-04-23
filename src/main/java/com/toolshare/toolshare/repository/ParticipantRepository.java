@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParticipantRepository extends JpaRepository <Participant, Long> {
-    
+
     Participant findByLastName(String lastName);
 
     //This method is used in the service class to link a save a participant under a specific user

@@ -1,106 +1,182 @@
+
 package com.toolshare.toolshare.service.participantservice;
 
-import com.toolshare.toolshare.exception.BadRequestException;
+import com.toolshare.toolshare.exception.DuplicateEmailException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.Participant;
-
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.service.securityservice.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link ParticipantService} interface.
+ */
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
 
-    //Importing required repositories and instantiating
-
+    /**
+     * The repository for accessing and modifying participant data
+     * in the database.
+     */
     @Autowired
     private ParticipantRepository participantRepository;
 
+    /**
+     * The service for managing user accounts and authentication.
+     */
     @Autowired
     private UserService userService;
 
-
+    /**
+     * Retrieves all the participants from the repository.
+     *
+     * @return a list of {@link Participant} objects.
+     */
     @Override
     public List<Participant> findAllParticipants() {
-
         return participantRepository.findAll();
     }
 
-    //Below is business logic for CRUD operations and additional operations pertaining to participants
-
+    /**
+     * Saves a new {@link Participant} object to the repository.
+     *
+     * @param participant the {@link Participant} object to save.
+     * @return the saved {@link Participant} object.
+     * @throws DuplicateEmailException if the email of the {@link Participant}
+     * object already exists in the repository.
+     */
     @Override
-    public Participant saveParticipant(Participant participant) {
-        //The below line is essential for finding the logged in user before saving the participant
-        //and all the attributes of the participant. Ensures referential integrity in the 1-1 relationship
-        //between user and participant
+    public Participant saveParticipant(final Participant participant) {
         participant.setUser(userService.getLoggedInUser());
-        Boolean existsEmail = Boolean.valueOf(participantRepository
+        boolean existsEmail = Boolean.parseBoolean(participantRepository
                 .selectExistsEmail(participant.getEmail()));
         if (existsEmail) {
-            throw new BadRequestException(
+            throw new DuplicateEmailException(
                     "Email " + participant.getEmail() + " bestaat al");
         }
-        return participantRepository.save(participant);
+        try {
+            return participantRepository.save(participant);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateEmailException(
+                    "Email " + participant.getEmail() + " bestaat al");
+        }
     }
 
+    /**
+     * Finds a {@link Participant} object by last name.
+     *
+     * @param lastName the last name of the {@link Participant} object to find.
+     * @return the found {@link Participant} object.
+     */
     @Override
-    public Participant findByLastName(String lastName) {
-        return participantRepository.findByLastName(lastName);
+    public Participant findByLastName(final String lastName) {
+        return participantRepository
+                .findByLastName(lastName);
     }
 
+    /**
+     * Deletes a {@link Participant} object from the repository.
+     *
+     * @param id the id of the {@link Participant} object to delete.
+     */
     @Override
-    public void deleteParticipant(Long id) {
-        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    public void deleteParticipant(final Long id) {
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException());
         participantRepository.delete(participant);
     }
 
-    //Earlier versions did not return a requestbody (was void) so changing the put-method
-    //Using a ternary to check for existence of user, before changing values
+    /**
+     * Updates an existing {@link Participant} object in the repository.
+     *
+     * @param participant the updated {@link Participant} object.
+     * @param id          the id of the {@link Participant} object to update.
+     * @return the updated {@link Participant} object.
+     */
     @Override
     public Participant updateParticipant(
-            Participant participant, Long id)
-    {
-        Participant currenParticipant = getParticipantById(id);
-        currenParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currenParticipant.getFirstName());
-        currenParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currenParticipant.getLastName());
-        currenParticipant.setPostcode(participant.getPostcode() != null ? participant.getPostcode() : currenParticipant.getPostcode());
-        currenParticipant.setPhotoURL(participant.getPhotoURL() != null ? participant.getPhotoURL() : currenParticipant.getPhotoURL());
-        currenParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currenParticipant.getEmail());
-        currenParticipant.setMobileNumber(participant.getMobileNumber() != null ? participant.getMobileNumber() : currenParticipant.getMobileNumber());
-        return participantRepository.save(currenParticipant);
+            final Participant participant,
+            final Long id) {
+        Participant currentParticipant = getParticipantById(id);
+        currentParticipant.setFirstName(participant
+                .getFirstName() != null ? participant
+                .getFirstName() : currentParticipant.getFirstName());
+        currentParticipant.setLastName(participant
+                .getLastName() != null ? participant
+                .getLastName() : currentParticipant.getLastName());
+        currentParticipant.setPostcode(participant
+                .getPostcode() != null ? participant
+                .getPostcode() : currentParticipant.getPostcode());
+        currentParticipant
+                .setPhotoURL(participant.getPhotoURL() != null ? participant
+                        .getPhotoURL() : currentParticipant.getPhotoURL());
+        currentParticipant
+                .setEmail(participant.getEmail() != null ? participant
+                        .getEmail() : currentParticipant.getEmail());
+        currentParticipant.setMobileNumber(participant
+                .getMobileNumber() != null ? participant
+                .getMobileNumber() : currentParticipant.getMobileNumber());
+        return participantRepository.save(currentParticipant);
     }
 
+    /**
+     * Deletes all {@link ShareItem} objects of a {@link Participant} object.
+     *
+     * @param participantId the id of the {@link Participant} object w
+     * whose {@link ShareItem} objects are to be deleted.
+     * @throws ResourceNotFoundException if the {@link Participant}
+     * object is not
+     * found in the repository.
+     */
     @Override
-    public void deleteAllItemsOfParticipant(Long participantId) {
+    public void deleteAllItemsOfParticipant(final Long participantId) {
         Participant participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + participantId));
-        //Accessing the participant, getting all the items, then deleting them:
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Deelnemer niet gevonden met id = " + participantId));
         participant.getItems().clear();
         participantRepository.save(participant);
     }
 
+    /**
+     * Retrieves all the {@link ShareItem} objects of
+     * a {@link Participant} object.
+     *
+     * @param participantId the id of the {@link Participant} object
+     *                      whose {@link ShareItem} objects are to be retrieved.
+     * @return the {@link Participant} object with all
+     * its {@link ShareItem} objects.
+     * @throws ResourceNotFoundException if the {@link Participant} object
+     * is not found in the repository.
+     */
     @Override
-    public Participant getAllItemsByParticipantId(Long participantId) {
-        Participant Participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id = " + participantId));
-        List<ShareItem> items = new ArrayList<ShareItem>();
-        items.addAll(Participant.getItems());
-
-        return Participant;
-    }
-
-    @Override
-    public Participant getParticipantById(Long id) {
-        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    public Participant getAllItemsByParticipantId(final Long participantId) {
+        Participant participant = participantRepository.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Deelnemer niet gevonden met id = " + participantId));
+        List<ShareItem> items = new ArrayList<>();
+        items.addAll(participant.getItems());
         return participant;
     }
 
+    /**
+     * Retrieves a {@link Participant} object by id.
+     *
+     * @param id the id of the {@link Participant} object to retrieve.
+     * @return the retrieved {@link Participant} object.
+     * @throws RuntimeException if the {@link Participant}
+     * object is not found in the repository.
+     */
+    @Override
+    public Participant getParticipantById(final Long id) {
+        Participant participant = participantRepository
+                .findById(id).orElseThrow(() -> new RuntimeException());
+        return participant;
+    }
 }
-
-
-

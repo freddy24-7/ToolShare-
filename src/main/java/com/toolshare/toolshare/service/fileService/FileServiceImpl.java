@@ -1,3 +1,4 @@
+
 package com.toolshare.toolshare.service.fileService;
 
 import com.toolshare.toolshare.model.ImageFile;
@@ -7,20 +8,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Service implementation for managing image files.
+ */
 @Service
 public class FileServiceImpl implements FileService {
 
-    //importing repository and instantiating
+    /**
+     * The repository for managing image files.
+     */
     @Autowired
     private ImageFileRepository imageFileRepository;
 
-    //checking for correct format and saving image-file
+    /**
+     * Saves an image file to the database.
+     *
+     * @param file the image file to save
+     * @return the saved image file
+     * @throws Exception if the file cannot be saved
+     */
     @Override
-    public ImageFile saveImageFile(MultipartFile file) throws Exception {
+    public ImageFile saveImageFile(final MultipartFile file) throws Exception {
         String fileName = StringUtils.cleanPath((file.getOriginalFilename()));
         try {
-            if(fileName.contains("..")) {
-                throw  new Exception("Bestandsnaam bevat ongeldige padvolgorde "
+            if (fileName.contains("..")) {
+                throw new Exception("Bestandsnaam bevat ongeldige padvolgorde "
                         + fileName);
             }
             ImageFile imageFile
@@ -33,11 +45,18 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    //Obtaining image-file (downloading)
+    /**
+     * Gets an image file from the database by ID.
+     *
+     * @param fileId the ID of the image file to get
+     * @return the image file with the specified ID
+     * @throws Exception if the image file with the given ID is not found
+     */
     @Override
-    public ImageFile getImageFile(String fileId) throws Exception {
+    public ImageFile getImageFile(final String fileId) throws Exception {
         return imageFileRepository
                 .findById(fileId)
-                .orElseThrow(() -> new Exception("Bestand niet gevonden met id: " + fileId));
+                .orElseThrow(() -> new Exception(
+                        "Bestand niet gevonden met id: " + fileId));
     }
 }
