@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.itemservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.ShareItem;
 import java.util.List;

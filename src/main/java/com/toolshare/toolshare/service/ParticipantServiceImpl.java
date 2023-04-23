@@ -1,12 +1,11 @@
 
-package com.toolshare.toolshare.service.participantservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.exception.DuplicateEmailException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ParticipantRepository;
-import com.toolshare.toolshare.service.securityservice.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

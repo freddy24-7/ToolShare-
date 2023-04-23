@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.fileService;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.ImageFile;
 import com.toolshare.toolshare.repository.ImageFileRepository;
@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
         String fileName = StringUtils.cleanPath((file.getOriginalFilename()));
         try {
             if (fileName.contains("..")) {
-                throw new Exception("Bestandsnaam bevat ongeldige padvolgorde "
+                throw  new Exception("Bestandsnaam bevat ongeldige padvolgorde "
                         + fileName);
             }
             ImageFile imageFile

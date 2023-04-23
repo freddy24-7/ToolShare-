@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.securityservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;

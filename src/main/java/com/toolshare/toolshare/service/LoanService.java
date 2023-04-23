@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.loanservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.LoanAction;
 import com.toolshare.toolshare.model.Participant;

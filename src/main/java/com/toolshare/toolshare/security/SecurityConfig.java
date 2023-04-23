@@ -1,7 +1,6 @@
+
 package com.toolshare.toolshare.security;
 
-import com.toolshare.toolshare.model.Role;
-import com.toolshare.toolshare.security.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,74 +19,115 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Spring Security configuration class.
+ * Configures authentication, authorization, and CORS.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //Autowiring customUserDetailsService
+    /**
+     * The CustomUserDetailsService dependency to be injected by Spring.
+     */
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    //configuring password
+    /**
+     * Configures authentication using the CustomUserDetailsService
+     * and password encoder.
+     *
+     * @param auth The AuthenticationManagerBuilder object to configure
+     * @throws Exception If an error occurs during configuration
+     */
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception
-    {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+    protected void configure(final AuthenticationManagerBuilder auth)
+            throws Exception {
+        auth.userDetailsService(customUserDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
-    //Creating required bean
+    /**
+     * Creates an AuthenticationManager bean for use in the application.
+     *
+     * @return The AuthenticationManager bean
+     * @throws Exception If an error occurs while creating the bean
+     */
     @Override
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    public AuthenticationManager authenticationManagerBean() throws Exception
-    {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    //Handling CORS, and CRUD-permissions using antMatchers, as well as JWTAuthorizationFilter
+    /**
+     * Configures HTTP security, including CORS, session creation policy,
+     * and authorization rules.
+     *
+     * @param http The HttpSecurity object to configure
+     * @throws Exception If an error occurs during configuration
+     */
     @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(
+                SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/product").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/participant/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/participant/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/imagefile/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/product").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/participant/**")
+                .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/participant/**")
+                .permitAll()
+                .antMatchers(HttpMethod.POST, "/api/imagefile/**")
+                .permitAll()
                 .antMatchers(HttpMethod.GET, "/download/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/items/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/items/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/loan/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/loan/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/items/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/items/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/loan/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/loan/**").authenticated()
                 .anyRequest().authenticated();
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(),
+                UsernamePasswordAuthenticationFilter.class);
     }
 
-    //Creating required beans
+    /**
+     * Creates a JwtAuthorizationFilter bean for use in the application.
+     *
+     * @return The JwtAuthorizationFilter bean
+     */
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter()
-    {
+    public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter();
     }
+
+    /**
+     * Creates a BCryptPasswordEncoder bean for use in the application.
+     *
+     * @return The BCryptPasswordEncoder bean
+     */
     @Bean
-    public PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //Defining required origin (CORS-management)
+    /**
+     * The allowed origin value obtained from the application's properties
+     * file using the @Value annotation.
+     */
     @Value("${allowed.origin}")
     private String allowedOrigin;
+
+    /**
+     * Configures CORS settings for the application.
+     *
+     * @return The WebMvcConfigurer object to configure
+     */
     @Bean
-    public WebMvcConfigurer corsConfigurer()
-    {
-        return new WebMvcConfigurer()
-        {
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry)
-            {
+            public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(allowedOrigin)
                         .allowedMethods("POST", "GET", "PUT", "DELETE")

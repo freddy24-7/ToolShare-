@@ -2,7 +2,8 @@ package com.toolshare.toolshare.service.participantservice;
 
 import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.repository.ParticipantRepository;
-import com.toolshare.toolshare.service.securityservice.UserServiceImpl;
+import com.toolshare.toolshare.service.ParticipantServiceImpl;
+import com.toolshare.toolshare.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

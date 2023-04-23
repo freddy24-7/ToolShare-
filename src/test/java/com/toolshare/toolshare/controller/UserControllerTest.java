@@ -3,8 +3,8 @@
 //import com.toolshare.toolshare.model.Role;
 //import com.toolshare.toolshare.model.User;
 //import com.toolshare.toolshare.security.CustomUserDetailsService;
-//import com.toolshare.toolshare.security.jwt.JwtProviderImpl;
-//import com.toolshare.toolshare.service.securityservice.UserServiceImpl;
+//import com.toolshare.toolshare.security.JwtProviderImpl;
+//import com.toolshare.toolshare.service.UserServiceImpl;
 //import org.junit.jupiter.api.Disabled;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

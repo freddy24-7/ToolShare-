@@ -1,9 +1,9 @@
 
-package com.toolshare.toolshare.service.securityservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.security.UserPrinciple;
-import com.toolshare.toolshare.security.jwt.JwtProvider;
+import com.toolshare.toolshare.security.JwtProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,12 +1,11 @@
 package com.toolshare.toolshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toolshare.toolshare.dto.UserDto;
 import com.toolshare.toolshare.model.User;
 import com.toolshare.toolshare.security.CustomUserDetailsService;
-import com.toolshare.toolshare.security.jwt.JwtProvider;
-import com.toolshare.toolshare.service.securityservice.AuthenticationServiceImpl;
-import com.toolshare.toolshare.service.securityservice.UserServiceImpl;
+import com.toolshare.toolshare.security.JwtProvider;
+import com.toolshare.toolshare.service.AuthenticationServiceImpl;
+import com.toolshare.toolshare.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

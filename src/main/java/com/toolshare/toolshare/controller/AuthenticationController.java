@@ -4,29 +4,42 @@ package com.toolshare.toolshare.controller;
 import com.toolshare.toolshare.dto.UserDto;
 import com.toolshare.toolshare.dto.UserUtility;
 import com.toolshare.toolshare.model.User;
-import com.toolshare.toolshare.service.securityservice.AuthenticationService;
-import com.toolshare.toolshare.service.securityservice.UserService;
+import com.toolshare.toolshare.service.AuthenticationService;
+import com.toolshare.toolshare.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
 
-    //Autowiring the service classes where the business logic takes place
+    /**
+     * The authentication service where the business logic
+     * for user authentication takes place.
+     */
     @Autowired
     private AuthenticationService authenticationService;
 
+    /**
+     * The user service where the business logic for
+     * user management takes place.
+     */
     @Autowired
     private UserService userService;
 
-    //Post mapping for sign-up. Here we check that user name is not already taken,
-    //and return an error to the frontend if that is the case
+    /**
+     * Handles the sign-up of a new user.
+     *
+     * @param userDto the user to sign up
+     * @return a response entity indicating success or failure
+     */
     @PostMapping("sign-up")
-    public ResponseEntity<?> signUp(@RequestBody User userDto) {
+    public ResponseEntity<?> signUp(@RequestBody final User userDto) {
         if (userService.findByUsername(userDto.getUsername()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -35,14 +48,17 @@ public class AuthenticationController {
         return new ResponseEntity<>(userDtoResponse, HttpStatus.CREATED);
     }
 
-    //Here we are authenticating a registered user trying to log in, and returning a JWT token
-    //token is valid until the user logs out (specified under application.properties)
-    @PostMapping("sign-in")//api/authentication/sign-in
-    public ResponseEntity<?> signIn(@RequestBody User user) {
+    /**
+     * Handles the sign-in of a user.
+     *
+     * @param user the user to sign in
+     * @return a response entity containing the
+     * user's information and a JWT token
+     */
+    @PostMapping("sign-in")
+    public ResponseEntity<?> signIn(@RequestBody final User user) {
         User loggedInUser = authenticationService.signInAndReturnJWT(user);
         UserDto userDtoResponse = UserUtility.convertToDto(loggedInUser);
         return new ResponseEntity<>(userDtoResponse, HttpStatus.OK);
     }
-
-
 }

@@ -1,11 +1,11 @@
 
-package com.toolshare.toolshare.service.fileService;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.ImageFile;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Service interface for managing image files.
+ * Interface for managing image files.
  */
 public interface FileService {
 

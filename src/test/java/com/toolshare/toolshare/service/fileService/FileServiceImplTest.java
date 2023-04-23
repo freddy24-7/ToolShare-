@@ -2,6 +2,7 @@ package com.toolshare.toolshare.service.fileService;
 
 import com.toolshare.toolshare.model.ImageFile;
 import com.toolshare.toolshare.repository.ImageFileRepository;
+import com.toolshare.toolshare.service.FileServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

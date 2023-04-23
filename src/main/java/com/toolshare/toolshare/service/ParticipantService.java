@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.participantservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.Participant;
 import java.util.List;

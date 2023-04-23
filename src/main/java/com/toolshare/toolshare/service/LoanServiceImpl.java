@@ -1,5 +1,5 @@
 
-package com.toolshare.toolshare.service.loanservice;
+package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.LoanAction;
