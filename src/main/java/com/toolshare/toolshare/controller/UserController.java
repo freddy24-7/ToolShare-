@@ -10,7 +10,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,5 +61,21 @@ public class UserController {
             @PathVariable final Role role) {
         userService.changeRole(role, userPrinciple.getUsername());
         return ResponseEntity.ok().build();
+    }
+    /**
+     * Deletes a user with the specified ID.
+     *
+     * <p>
+     * This endpoint requires the logged-in user to have the 'ADMIN' role.
+     * If the logged-in user
+     * is not an admin, a 403 Forbidden error will be returned.
+     * </p>
+     *
+     * @param id The ID of the user to delete.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable final Long id) {
+        userService.deleteUser(id);
     }
 }

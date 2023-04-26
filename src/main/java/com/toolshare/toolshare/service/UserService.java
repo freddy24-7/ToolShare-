@@ -3,6 +3,7 @@ package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,4 +48,8 @@ public interface UserService {
          * @return The logged in user.
          */
         User getLoggedInUser();
+
+
+        @Transactional
+        void deleteUser(Long userId);
 }

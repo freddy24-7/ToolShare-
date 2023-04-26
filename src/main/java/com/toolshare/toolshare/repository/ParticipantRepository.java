@@ -3,6 +3,9 @@ package com.toolshare.toolshare.repository;
 
 import com.toolshare.toolshare.model.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -33,4 +36,17 @@ public interface ParticipantRepository extends JpaRepository
     default String selectExistsEmail(String email) {
         return email;
     }
+
+    /**
+     Updates the user ID of the participant to null.
+     This method executes a JPQL update query to set the user ID of
+     the participant with the given user ID to null. The query updates
+     the "user" attribute of the Participant entity to null, where the user
+     ID matches the given user ID parameter.
+     @param userId the ID of the user whose participant record should be updated
+     */
+    @Modifying
+    @Query("UPDATE Participant p SET p.user = null WHERE p.user.id = :userId")
+    void updateUserIdToNull(@Param("userId") Long userId);
+
 }

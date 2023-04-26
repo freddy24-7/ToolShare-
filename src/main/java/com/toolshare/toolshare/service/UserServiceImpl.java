@@ -4,6 +4,7 @@ package com.toolshare.toolshare.service;
 import com.toolshare.toolshare.exception.UsernameNotFoundExceptionCustom;
 import com.toolshare.toolshare.model.Role;
 import com.toolshare.toolshare.model.User;
+import com.toolshare.toolshare.repository.ParticipantRepository;
 import com.toolshare.toolshare.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     /**
+     * The repository for participant objects.
+     */
+    private final ParticipantRepository participantRepository;
+
+    /**
      * The encoder for password hashing.
      */
     private final PasswordEncoder passwordEncoder;
@@ -32,12 +38,16 @@ public class UserServiceImpl implements UserService {
      * Constructs a new UserServiceImpl with the given dependencies.
      *
      * @param userUserRepository The repository for user objects.
+     * @param userParticipantRepository The repository for user objects.
      * @param userPasswordEncoder The encoder for password hashing.
      */
     public UserServiceImpl(final UserRepository userUserRepository,
-                           final PasswordEncoder userPasswordEncoder) {
+                           final PasswordEncoder userPasswordEncoder,
+                           final ParticipantRepository
+                                   userParticipantRepository) {
         this.userRepository = userUserRepository;
         this.passwordEncoder = userPasswordEncoder;
+        this.participantRepository = userParticipantRepository;
     }
 
     /**
@@ -105,6 +115,17 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new UsernameNotFoundExceptionCustom(
                                 "Gebruiker niet gevonden"));
+    }
+    /**
+     * Deletes a user by ID.
+     *
+     * @param userId The ID of the user to delete.
+     */
+    @Override
+    @Transactional
+    public void deleteUser(final Long userId) {
+        participantRepository.updateUserIdToNull(userId);
+        userRepository.deleteById(userId);
     }
 }
 

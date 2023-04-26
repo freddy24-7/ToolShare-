@@ -74,13 +74,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/product").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/participant/**")
-                .authenticated()
-                .antMatchers(HttpMethod.GET, "/api/participant/**")
-                .permitAll()
-                .antMatchers(HttpMethod.POST, "/api/imagefile/**")
-                .permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/participant/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/participant/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/imagefile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/download/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/items/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/items/**").authenticated()
@@ -90,6 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtAuthorizationFilter(),
                 UsernamePasswordAuthenticationFilter.class);
     }
+
 
     /**
      * Creates a JwtAuthorizationFilter bean for use in the application.

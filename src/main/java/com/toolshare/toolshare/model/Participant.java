@@ -142,6 +142,7 @@ public class Participant {
      * User entity when they are performed on this Participant.
      */
     @OneToOne(
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
