@@ -9,7 +9,9 @@ import com.toolshare.toolshare.repository.ParticipantRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     private UserService userService;
 
+
     /**
      * Retrieves all the participants from the repository.
      *
@@ -54,30 +57,24 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public Participant saveParticipant(final Participant participant) {
         participant.setUser(userService.getLoggedInUser());
-        boolean existsEmail = Boolean.parseBoolean(participantRepository
-                .selectExistsEmail(participant.getEmail()));
-        if (existsEmail) {
-            throw new DuplicateEmailException(
-                    "Email " + participant.getEmail() + " bestaat al");
-        }
-        try {
-            return participantRepository.save(participant);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEmailException(
-                    "Email " + participant.getEmail() + " bestaat al");
-        }
-    }
 
-    /**
-     * Finds a {@link Participant} object by last name.
-     *
-     * @param lastName the last name of the {@link Participant} object to find.
-     * @return the found {@link Participant} object.
-     */
-    @Override
-    public Participant findByLastName(final String lastName) {
-        return participantRepository
-                .findByLastName(lastName);
+        String postcode = participant.getPostcode();
+        String mobileNumber = participant.getMobileNumber();
+
+        if (postcode != null && postcode.matches("^3543[A-Z]{2}$") && postcode.length() <= 6) {
+            if (mobileNumber != null && mobileNumber.matches("^06[0-9]{8}$")) {
+                try {
+                    return participantRepository.save(participant);
+                } catch (DataIntegrityViolationException e) {
+                    throw new DuplicateEmailException(
+                            "Email " + participant.getEmail() + " bestaat al");
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile number invalid. Must start with 06 and be followed by 8 digits");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Postcode invalid. Must start with 3543 and be followed by two capital letters");
+        }
     }
 
     /**
@@ -88,7 +85,8 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public void deleteParticipant(final Long id) {
         Participant participant = participantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Deelnemer niet gevonden met id = " + id));
         participantRepository.delete(participant);
     }
 
@@ -104,25 +102,30 @@ public class ParticipantServiceImpl implements ParticipantService {
             final Participant participant,
             final Long id) {
         Participant currentParticipant = getParticipantById(id);
-        currentParticipant.setFirstName(participant
-                .getFirstName() != null ? participant
-                .getFirstName() : currentParticipant.getFirstName());
-        currentParticipant.setLastName(participant
-                .getLastName() != null ? participant
-                .getLastName() : currentParticipant.getLastName());
-        currentParticipant.setPostcode(participant
-                .getPostcode() != null ? participant
-                .getPostcode() : currentParticipant.getPostcode());
-        currentParticipant
-                .setPhotoURL(participant.getPhotoURL() != null ? participant
-                        .getPhotoURL() : currentParticipant.getPhotoURL());
-        currentParticipant
-                .setEmail(participant.getEmail() != null ? participant
-                        .getEmail() : currentParticipant.getEmail());
-        currentParticipant.setMobileNumber(participant
-                .getMobileNumber() != null ? participant
-                .getMobileNumber() : currentParticipant.getMobileNumber());
-        return participantRepository.save(currentParticipant);
+
+        String postcode = participant.getPostcode();
+        String mobileNumber = participant.getMobileNumber();
+
+        if (postcode != null && postcode.matches("^3543[A-Z]{2}$") && postcode.length() <= 6) {
+            if (mobileNumber != null && mobileNumber.matches("^06[0-9]{8}$")) {
+                try {
+                    currentParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currentParticipant.getFirstName());
+                    currentParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currentParticipant.getLastName());
+                    currentParticipant.setPostcode(postcode);
+                    currentParticipant.setPhotoURL(participant.getPhotoURL() != null ? participant.getPhotoURL() : currentParticipant.getPhotoURL());
+                    currentParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currentParticipant.getEmail());
+                    currentParticipant.setMobileNumber(mobileNumber);
+                    return participantRepository.save(currentParticipant);
+                } catch (DataIntegrityViolationException e) {
+                    throw new DuplicateEmailException(
+                            "Email " + participant.getEmail() + " bestaat al");
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile number invalid. Must start with 06 and be followed by 8 digits");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Postcode invalid. Must start with 3543 and be followed by two capital letters");
+        }
     }
 
     /**
@@ -175,7 +178,10 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public Participant getParticipantById(final Long id) {
         Participant participant = participantRepository
-                .findById(id).orElseThrow(() -> new RuntimeException());
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Participant not found with ID " + id));
         return participant;
     }
 }

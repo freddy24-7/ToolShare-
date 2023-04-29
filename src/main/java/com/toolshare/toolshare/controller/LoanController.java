@@ -4,6 +4,10 @@ package com.toolshare.toolshare.controller;
 import com.toolshare.toolshare.model.LoanAction;
 import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.service.LoanService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +35,18 @@ public class LoanController {
      * @return the newly saved loan action
      */
     @PostMapping("/participant/{id}")
+    @Operation(summary = "This API posts a specific interest "
+            + "in a share item")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "interest indicated successfully",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description =
+                            "Participant not found with the given id"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public LoanAction saveLoanAction(
             @PathVariable final Long id,
             @RequestBody final LoanAction addLoanAction) {
@@ -45,6 +61,18 @@ public class LoanController {
      * their associated loan history
      */
     @GetMapping("/participants/loaninterest/{id}")
+    @Operation(summary = "This API retrieves all interest "
+            + "indications the participant has made")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "interest indications obtained successfully",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description =
+                            "Participant not found with the given id"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public Participant getLoanActionById(@PathVariable final Long id) {
         return loanService.getLoanActionById(id);
     }

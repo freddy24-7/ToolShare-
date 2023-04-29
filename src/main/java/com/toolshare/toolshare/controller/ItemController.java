@@ -5,6 +5,10 @@ import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.service.ItemService;
 import com.toolshare.toolshare.service.ParticipantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +46,14 @@ public class ItemController {
      * @return a list of all items
      */
     @GetMapping("/items")
+    @Operation(summary = "This API retrieves a list of all uploaded items.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of share items retrieved successfully",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public List<ShareItem> getAllItems() {
         return itemService.findAllItems();
     }
@@ -55,6 +67,18 @@ public class ItemController {
      * cannot be found
      */
     @GetMapping("/items/{itemId}")
+    @Operation(summary = "This API retrieves a specific item based "
+            + "on an item id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Item successfully retrieved",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "Item not found",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<ShareItem> getShareItemsById(
             @PathVariable final Long itemId) {
         ShareItem item = itemService.getShareItemsById(itemId);
@@ -69,6 +93,20 @@ public class ItemController {
      * and their associated items, or null if not found
      */
     @GetMapping("/participants/items/{id}")
+    @Operation(summary = "This API retrieves the list of items uploaded by a "
+            + "particular user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of share items uploaded by a specific "
+                            + "participant retrieved successfully",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "List of share items uploaded by specific "
+                            + "participant not found",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public Participant getAllItemsByParticipantId(
             @PathVariable final Long id) {
         return participantService.getAllItemsByParticipantId(id);
@@ -82,6 +120,20 @@ public class ItemController {
      * @return the newly saved item
      */
     @PostMapping("/participants/items/{id}")
+    @Operation(summary = "This API allows a participant to upload "
+            + "a share item. A participant can upload several items, "
+            + "although one at a time")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Share item successfully uploaded",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad request. Neither item name, "
+                            + "description or photo can be null",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ShareItem createShareItem(
             @PathVariable final Long id,
             @RequestBody final ShareItem addShareItem) {
@@ -98,6 +150,19 @@ public class ItemController {
      * item cannot be found
      */
     @PutMapping("/items/{itemId}")
+    @Operation(summary = "This API allows a participant edit "
+            + "a share item that the participant has earlier uploaded")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Share item successfully edited",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad request. Neither item name, "
+                            + "description or photo can be null",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<ShareItem> updateShareItem(
             @PathVariable final long itemId,
             @RequestBody final ShareItem updateItem) {
@@ -111,6 +176,16 @@ public class ItemController {
      * @param itemId the ID of the item to delete
      */
     @DeleteMapping(path = "{itemId}")
+    @Operation(summary = "This API allows the deletion of a share item object")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "share item object successfully deleted",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "No share item object found for that id"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public void deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
     }
@@ -121,6 +196,17 @@ public class ItemController {
      * @return a response entity with a success status code
      */
     @DeleteMapping("/participants/{id}/items")
+    @Operation(summary = "This API allows the deletion of all "
+            + "share items earlier uploaded by a participant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "all items belonging to participant deleted",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "No participant found for that id"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<List<ShareItem>> deleteAllItemsOfParticipant(
             @PathVariable final Long id) {
         participantService.deleteAllItemsOfParticipant(id);

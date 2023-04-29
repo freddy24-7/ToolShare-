@@ -22,14 +22,6 @@ public interface ParticipantService {
     Participant saveParticipant(Participant participant);
 
     /**
-     * Finds a participant by last name.
-     *
-     * @param lastName the last name of the participant to find
-     * @return the participant with the specified last name
-     */
-    Participant findByLastName(String lastName);
-
-    /**
      * Gets a participant by ID.
      *
      * @param id the ID of the participant to get

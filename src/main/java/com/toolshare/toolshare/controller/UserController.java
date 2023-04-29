@@ -8,6 +8,11 @@ import com.toolshare.toolshare.service.UserService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +49,16 @@ public class UserController {
      * @return a list of all users
      */
     @GetMapping
+    @Operation(summary = "This API retrieves a list of all users.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of users retrieved successfully",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "403",
+                    description = "Not authenticated, access forbidden"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public List<User> getAllUsers() {
         return userService.findAllUsers();
     }
@@ -56,6 +71,17 @@ public class UserController {
      * @return a response entity indicating success or failure of the operation
      */
     @PutMapping("change/{role}")
+    @Operation(summary = "This API allows an administrator to change a users"
+            + "role from 'USER' to 'ADMIN' and vice versa.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "role successfully changed",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "403",
+                    description = "Not authenticated, access forbidden"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<Void> changeRole(
             @AuthenticationPrincipal final UserPrinciple userPrinciple,
             @PathVariable final Role role) {
@@ -74,6 +100,16 @@ public class UserController {
      * @param id The ID of the user to delete.
      */
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "This API allows an administrator delete a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "user successfully deleted",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "403",
+                    description = "Not authenticated, access forbidden"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable final Long id) {
         userService.deleteUser(id);

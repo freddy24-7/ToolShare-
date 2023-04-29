@@ -1,12 +1,15 @@
 
 package com.toolshare.toolshare.service;
 
+import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ItemRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,7 +36,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItem(final Long itemId) {
         ShareItem shareItem = itemRepository
-                .findById(itemId).orElseThrow(() -> new RuntimeException());
+                .findById(itemId).orElseThrow(() -> new ResourceNotFoundException(
+                "Share item niet gevonden met id = " + itemId));
         itemRepository.delete(shareItem);
     }
 
@@ -76,12 +80,20 @@ public class ItemServiceImpl implements ItemService {
     public ShareItem createShareItem(
             final Long id,
             final ShareItem shareItemAddition) {
+        if (shareItemAddition.getItemName() == null
+                ||
+                shareItemAddition.getDescription() == null
+                ||
+                shareItemAddition.getPhotoURL() == null) {
+            throw new BadRequestException("Neither itemName, description"
+                    + ", or photoURL can be null");
+        }
         ShareItem shareItem = participantRepository
                 .findById(id).map(participant -> {
-            participant.getItems().add(shareItemAddition);
-            return itemRepository.save(shareItemAddition);
-        }).orElseThrow(() -> new ResourceNotFoundException(
-                "Deelnemer niet gevonden met id " + id));
+                    participant.getItems().add(shareItemAddition);
+                    return itemRepository.save(shareItemAddition);
+                }).orElseThrow(() -> new ResourceNotFoundException(
+                        "Deelnemer niet gevonden met id " + id));
         return shareItem;
     }
 
@@ -97,12 +109,37 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ShareItem updateShareItem(final long itemId,
                                      final ShareItem shareItemEdit) {
-        ShareItem itemUpdate = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "ShareItemId " + itemId + "niet gevonden"));
-        itemUpdate.setItemName(shareItemEdit.getItemName());
-        itemUpdate.setDescription(shareItemEdit.getDescription());
-        itemRepository.save(itemUpdate);
-        return itemUpdate;
+        try {
+            if (shareItemEdit.getItemName() == null
+                    || shareItemEdit.getItemName().isEmpty()
+                    || shareItemEdit.getDescription() == null
+                    || shareItemEdit.getDescription().isEmpty()
+                    || shareItemEdit.getPhotoURL() == null
+                    || shareItemEdit.getPhotoURL().isEmpty()) {
+                throw new IllegalArgumentException("Neither item name, "
+                        + "description, nor photo url can be null or empty");
+            }
+            ShareItem itemUpdate = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "ShareItemId " + itemId + "niet gevonden"));
+            itemUpdate.setItemName(shareItemEdit.getItemName());
+            itemUpdate.setDescription(shareItemEdit.getDescription());
+            itemUpdate.setPhotoURL(shareItemEdit.getPhotoURL());
+            itemRepository.save(itemUpdate);
+            return itemUpdate;
+        } catch (NullPointerException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "photoURL cannot be null", ex);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        } catch (ResourceNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "An unexpected error occurred", ex);
+        }
     }
 }

@@ -21,7 +21,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -80,11 +79,6 @@ public class Participant {
      * The postcode for this service. Must not be blank.
      */
     @NotBlank
-    //Below RegeX pattern for the postcode area of this service
-    @Pattern(regexp =
-            "^[3][5][4][3] ?(?!sa|sd|ss|SA|SD|SS)([A-Z]{2}$|[a-z]{2}$)",
-            message =
-                    "U moet een geldige postcode invoeren die begint met 3543")
     @Column(nullable = false)
     private String postcode;
 
@@ -101,9 +95,6 @@ public class Participant {
      * it consists of ten digits only.
      */
     @NotBlank
-    @Pattern(
-            regexp = "^\\d{10}$",
-            message = "je mobiele nummer moet tien cijfers hebben")
     @Column(nullable = false)
     private String mobileNumber;
 

@@ -52,22 +52,19 @@ public class ShareItem {
     /**
      * Defining item name, making it non-nullable.
      */
-    @NotBlank
-    @Column(name = "itemName", nullable = false)
+    @Column
     private String itemName;
 
     /**
      * Defining description, making it non-nullable.
      */
-    @NotBlank
-    @Column(name = "description", nullable = false)
+    @Column
     private String description;
 
     /**
-     * Defining photo URL, making it non-nullable.
+     * Defining photo URL.
      */
-    @NotBlank
-    @Column(nullable = false)
+    @Column
     private String photoURL;
 
     /**

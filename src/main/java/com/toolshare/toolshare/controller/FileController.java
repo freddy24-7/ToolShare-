@@ -4,6 +4,11 @@ package com.toolshare.toolshare.controller;
 import com.toolshare.toolshare.model.DataObtained;
 import com.toolshare.toolshare.model.ImageFile;
 import com.toolshare.toolshare.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -38,8 +44,22 @@ public class FileController {
      * @throws Exception if there is an error uploading the file
      */
     @PostMapping("api/imagefile/upload")
+    @Operation(summary = "This API allows a participant to post an image.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "image uploaded successfully",
+                    content = {@Content(mediaType = "multipart/form-data",
+                            schema = @Schema(
+                                    implementation = DataObtained.class))}),
+            @ApiResponse(responseCode = "400",
+                    description =
+                            "Bad Request"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public DataObtained uploadFile(
-            @RequestParam("file") final MultipartFile file) throws Exception {
+            @RequestParam("file") @RequestPart("file")
+            final MultipartFile file) throws Exception {
         ImageFile imageFile = null;
         String downloadUrl = "";
         imageFile = fileService.saveImageFile(file);
@@ -62,6 +82,19 @@ public class FileController {
      * @throws Exception if there is an error downloading the file
      */
     @GetMapping("download/{fileId}")
+    @Operation(summary = "This API allows a participant to download an image.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "image downloaded successfully",
+                    content = {@Content(mediaType = "multipart/form-data",
+                            schema = @Schema(
+                                    implementation = DataObtained.class))}),
+            @ApiResponse(responseCode = "400",
+                    description =
+                            "Bad Request"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<Resource> downloadFile(
             @PathVariable final String fileId) throws Exception {
         ImageFile imageFile = null;

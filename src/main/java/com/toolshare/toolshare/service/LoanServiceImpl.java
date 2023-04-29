@@ -45,10 +45,9 @@ public class LoanServiceImpl implements LoanService {
         LoanAction loanAction = participantRepository
                 .findById(id).map(participant -> {
             participant.getLoanActions().add(loanActionAddition);
-
             return loanRepository.save(loanActionAddition);
         }).orElseThrow(() -> new ResourceNotFoundException(
-                "Deelnemer niet gevonden met id = " + id));
+                "Participant niet gevonden met id = " + id));
         return loanAction;
     }
 
