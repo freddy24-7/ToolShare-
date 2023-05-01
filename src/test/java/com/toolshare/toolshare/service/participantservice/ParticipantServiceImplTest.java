@@ -51,7 +51,7 @@ class ParticipantServiceImplTest {
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
         funnyParticipant.setPostcode("3543HW");
-        funnyParticipant.setMobileNumber("0909546543");
+        funnyParticipant.setMobileNumber("0609546543");
 
         topParticipant = new Participant();
         topParticipant.setId(2L);
@@ -60,7 +60,7 @@ class ParticipantServiceImplTest {
         topParticipant.setPhotoURL("allphoto.com");
         topParticipant.setEmail("smith@gmail.com.com");
         topParticipant.setPostcode("3543AA");
-        topParticipant.setMobileNumber("0909878732");
+        topParticipant.setMobileNumber("0609878732");
     }
 
     @Test

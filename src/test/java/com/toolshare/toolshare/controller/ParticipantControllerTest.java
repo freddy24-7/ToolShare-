@@ -74,7 +74,7 @@ class ParticipantControllerTest {
 
         when(participantService.findAllParticipants()).thenReturn(participantList);
 
-        this.mockMvc.perform(get("http://localhost:8080/api/participant/participants"))
+        this.mockMvc.perform(get("http://localhost:8080/api/participants"))
                 .andExpect(status().isOk());
     }
 
@@ -92,7 +92,7 @@ class ParticipantControllerTest {
         funnyParticipant.setMobileNumber("0909546543");
         //Act & stubbing the method
         when(participantService.getParticipantById(anyLong())).thenReturn(funnyParticipant);
-        this.mockMvc.perform(get("http://localhost:8080/api/participant/participants/{id}", 1L))
+        this.mockMvc.perform(get("http://localhost:8080/api/participants/{id}", 1L))
                 //assert
                 .andExpect(status().isOk());
     }
@@ -111,7 +111,7 @@ class ParticipantControllerTest {
         funnyParticipant.setMobileNumber("0909546543");
         //Act - and stub method
         when(participantService.saveParticipant(any(Participant.class))).thenReturn(funnyParticipant);
-        this.mockMvc.perform(post("http://localhost:8080/api/participant/participants")
+        this.mockMvc.perform(post("http://localhost:8080/api/participants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funnyParticipant)))
                 //Assert
@@ -133,7 +133,7 @@ class ParticipantControllerTest {
         //Act - and stub method
         when(participantService.updateParticipant(any(Participant.class), anyLong())).thenReturn(funnyParticipant);
 
-        this.mockMvc.perform(put("http://localhost:8080/api/participant/participants/{id}", 1L)
+        this.mockMvc.perform(put("http://localhost:8080/api/participants/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(funnyParticipant)))
                 //Assert
@@ -155,7 +155,7 @@ class ParticipantControllerTest {
         //Act
         doNothing().when(participantService).deleteParticipant(anyLong());
         //Assert
-        this.mockMvc.perform(delete("http://localhost:8080/api/participant/participants/{id}", 1L))
+        this.mockMvc.perform(delete("http://localhost:8080/api/participants/{id}", 1L))
                 .andExpect(status().isOk());
     }
 }

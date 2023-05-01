@@ -52,6 +52,10 @@ class LoanServiceImplTest {
 
         Participant funnyParticipant = new Participant();
         funnyParticipant.setId(5L);
+        funnyParticipant.setPostcode("3543AA");
+        funnyParticipant.setMobileNumber("0612123434");
+
+
 
         ShareItem newItem = new ShareItem();
         newItem.setItemId(2L);

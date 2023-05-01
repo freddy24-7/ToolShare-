@@ -60,8 +60,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 
         String postcode = participant.getPostcode();
         String mobileNumber = participant.getMobileNumber();
+        int postCodeLength = 6;
 
-        if (postcode != null && postcode.matches("^3543[A-Z]{2}$") && postcode.length() <= 6) {
+        if (postcode != null && postcode.matches(
+                "^3543[A-Z]{2}$") && postcode.length() <= postCodeLength) {
             if (mobileNumber != null && mobileNumber.matches("^06[0-9]{8}$")) {
                 try {
                     return participantRepository.save(participant);
@@ -70,10 +72,14 @@ public class ParticipantServiceImpl implements ParticipantService {
                             "Email " + participant.getEmail() + " bestaat al");
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile number invalid. Must start with 06 and be followed by 8 digits");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Mobile number invalid. Must start with 06 and "
+                                + "be followed by 8 digits");
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Postcode invalid. Must start with 3543 and be followed by two capital letters");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Postcode invalid. Must start with 3543 and be "
+                            + "followed by two capital letters");
         }
     }
 
@@ -105,26 +111,51 @@ public class ParticipantServiceImpl implements ParticipantService {
 
         String postcode = participant.getPostcode();
         String mobileNumber = participant.getMobileNumber();
+        int postCodeLength = 6;
 
-        if (postcode != null && postcode.matches("^3543[A-Z]{2}$") && postcode.length() <= 6) {
+        if (postcode != null && postcode.matches("^3543[A-Z]{2}$")
+                && postcode.length() <= postCodeLength) {
             if (mobileNumber != null && mobileNumber.matches("^06[0-9]{8}$")) {
                 try {
-                    currentParticipant.setFirstName(participant.getFirstName() != null ? participant.getFirstName() : currentParticipant.getFirstName());
-                    currentParticipant.setLastName(participant.getLastName() != null ? participant.getLastName() : currentParticipant.getLastName());
-                    currentParticipant.setPostcode(postcode);
-                    currentParticipant.setPhotoURL(participant.getPhotoURL() != null ? participant.getPhotoURL() : currentParticipant.getPhotoURL());
-                    currentParticipant.setEmail(participant.getEmail() != null ? participant.getEmail() : currentParticipant.getEmail());
-                    currentParticipant.setMobileNumber(mobileNumber);
+                    currentParticipant
+                            .setFirstName(participant.getFirstName() != null
+                                    ? participant.getFirstName()
+                                    : currentParticipant.getFirstName());
+                    currentParticipant
+                            .setLastName(participant.getLastName() != null
+                                    ? participant.getLastName()
+                                    : currentParticipant.getLastName());
+                    currentParticipant
+                            .setPostcode(participant.getPostcode() != null
+                                    ? participant.getPostcode()
+                                    : currentParticipant.getPostcode());
+                    currentParticipant
+                            .setPhotoURL(participant.getPhotoURL() != null
+                                    ? participant.getPhotoURL()
+                                    : currentParticipant.getPhotoURL());
+                    currentParticipant
+                            .setEmail(participant.getEmail() != null
+                                    ? participant.getEmail()
+                                    : currentParticipant.getEmail());
+                    currentParticipant
+                            .setMobileNumber(participant
+                                    .getMobileNumber() != null
+                                    ? participant.getMobileNumber()
+                                    : currentParticipant.getMobileNumber());
                     return participantRepository.save(currentParticipant);
                 } catch (DataIntegrityViolationException e) {
                     throw new DuplicateEmailException(
                             "Email " + participant.getEmail() + " bestaat al");
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile number invalid. Must start with 06 and be followed by 8 digits");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Mobile number invalid. Must start with 06 and be "
+                                + "followed by 8 digits");
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Postcode invalid. Must start with 3543 and be followed by two capital letters");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Postcode invalid.Must start with 3543 and be "
+                            + "followed by two capital letters");
         }
     }
 

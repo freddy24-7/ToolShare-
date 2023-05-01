@@ -24,7 +24,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "/api/participant")
+@RequestMapping(path = "/api/")
 public class ParticipantController {
 
     /**

@@ -54,8 +54,8 @@ class ItemServiceImplTest {
         funnyParticipant.setLastName("hansen");
         funnyParticipant.setPhotoURL("myphoto.com");
         funnyParticipant.setEmail("tom@myphoto.com");
-        funnyParticipant.setPostcode("3456HW");
-        funnyParticipant.setMobileNumber("0909546543");
+        funnyParticipant.setPostcode("3543HW");
+        funnyParticipant.setMobileNumber("0609546543");
 
         ShareItem newItem = new ShareItem();
         newItem.setItemId(2L);

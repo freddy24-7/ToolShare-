@@ -36,7 +36,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItem(final Long itemId) {
         ShareItem shareItem = itemRepository
-                .findById(itemId).orElseThrow(() -> new ResourceNotFoundException(
+                .findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException(
                 "Share item niet gevonden met id = " + itemId));
         itemRepository.delete(shareItem);
     }

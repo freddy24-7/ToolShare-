@@ -73,7 +73,7 @@ class ItemControllerTest {
 
         when(itemService.findAllItems()).thenReturn(shareItemList);
 
-        this.mockMvc.perform(get("http://localhost:8080/api/items/items"))
+        this.mockMvc.perform(get("http://localhost:8080/api/items"))
                 .andExpect(status().isOk());
 
 
@@ -89,7 +89,7 @@ class ItemControllerTest {
         newItem.setPhotoURL("www.saw.com");
         //Act & stubbing the method
         when(itemService.getShareItemsById(anyLong())).thenReturn(newItem);
-        this.mockMvc.perform(get("http://localhost:8080/api/items/items/{itemId}", 3L))
+        this.mockMvc.perform(get("http://localhost:8080/api/items/{itemId}", 3L))
                 //assert
                 .andExpect(status().isOk());
     }
@@ -120,7 +120,7 @@ class ItemControllerTest {
         //Act
         when(itemService.createShareItem(1L, (ShareItem.class).newInstance())).thenReturn(newItem);
 
-        this.mockMvc.perform(post("http://localhost:8080/api/items/participants/items/1")
+        this.mockMvc.perform(post("http://localhost:8080/api/participants/items/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newItem)))
                 //Assert
@@ -139,7 +139,7 @@ class ItemControllerTest {
         newItem.setPhotoURL("www.saw.com");
         //Act - and stub method
         when(itemService.updateShareItem(3L, newItem)).thenReturn(newItem);
-        this.mockMvc.perform(put("http://localhost:8080/api/items/items/{itemId}", 3L)
+        this.mockMvc.perform(put("http://localhost:8080/api/items/{itemId}", 3L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newItem)))
                 //Assert
@@ -158,7 +158,7 @@ class ItemControllerTest {
         //Act
         doNothing().when(itemService).deleteItem(anyLong());
         //Assert
-        this.mockMvc.perform(delete("http://localhost:8080/api/items/{itemId}", 3L))
+        this.mockMvc.perform(delete("http://localhost:8080/api/{itemId}", 3L))
                 .andExpect(status().isOk());
 
     }

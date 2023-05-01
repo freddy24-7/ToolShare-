@@ -50,6 +50,16 @@ public interface UserService {
         User getLoggedInUser();
 
 
+        /**
+         * Deletes a user with the specified ID.
+         *
+         * This operation is performed within a transaction,
+         * which ensures that the database is updated atomically
+         * and that any errors that occur during the
+         * deletion are rolled back.
+         *
+         * @param userId the ID of the user to delete
+         */
         @Transactional
         void deleteUser(Long userId);
 }
