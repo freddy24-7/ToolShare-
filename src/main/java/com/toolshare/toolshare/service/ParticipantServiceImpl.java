@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of the {@link ParticipantService} interface.
@@ -73,13 +73,13 @@ public class ParticipantServiceImpl implements ParticipantService {
                 }
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Mobile number invalid. Must start with 06 and "
-                                + "be followed by 8 digits");
+                        "Mobiel nummer ongeldig. Moet beginnen met 06 en "
+                                + "gevolgd worden door 8 cijfers.");
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Postcode invalid. Must start with 3543 and be "
-                            + "followed by two capital letters");
+                    "Postcode ongeldig. Moet beginnen met 3543 en gevolgd "
+                            + "worden door twee hoofdletters");
         }
     }
 
@@ -149,13 +149,13 @@ public class ParticipantServiceImpl implements ParticipantService {
                 }
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Mobile number invalid. Must start with 06 and be "
-                                + "followed by 8 digits");
+                        "Mobiel nummer ongeldig. Moet beginnen met 06 en "
+                                + "gevolgd worden door 8 cijfers");
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Postcode invalid.Must start with 3543 and be "
-                            + "followed by two capital letters");
+                    "Ongeldige postcode. Moet beginnen met 3543 en gevolgd "
+                            + "worden door twee hoofdletters.");
         }
     }
 
@@ -193,8 +193,7 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant participant = participantRepository.findById(participantId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Deelnemer niet gevonden met id = " + participantId));
-        List<ShareItem> items = new ArrayList<>();
-        items.addAll(participant.getItems());
+        Set<ShareItem> participantItems = participant.getItems();
         return participant;
     }
 
@@ -212,7 +211,7 @@ public class ParticipantServiceImpl implements ParticipantService {
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Participant not found with ID " + id));
+                        "Deelnemer niet gevonden met id " + id));
         return participant;
     }
 }

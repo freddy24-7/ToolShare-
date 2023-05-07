@@ -175,7 +175,7 @@ public class ItemController {
      *
      * @param itemId the ID of the item to delete
      */
-    @DeleteMapping(path = "{itemId}")
+    @DeleteMapping(path = "/items/{itemId}")
     @Operation(summary = "This API allows the deletion of a share item object")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",

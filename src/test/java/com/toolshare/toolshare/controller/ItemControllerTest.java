@@ -158,7 +158,7 @@ class ItemControllerTest {
         //Act
         doNothing().when(itemService).deleteItem(anyLong());
         //Assert
-        this.mockMvc.perform(delete("http://localhost:8080/api/{itemId}", 3L))
+        this.mockMvc.perform(delete("http://localhost:8080/api/items/{itemId}", 3L))
                 .andExpect(status().isOk());
 
     }

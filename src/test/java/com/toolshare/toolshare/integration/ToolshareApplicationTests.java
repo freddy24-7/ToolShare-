@@ -60,7 +60,7 @@ class ToolshareApplicationTests {
 	@Test
 	public void testGetAllParticipants() throws Exception {
 
-		RequestBuilder request = MockMvcRequestBuilders.get("http://localhost:" + port + "/api/participant/participants");
+		RequestBuilder request = MockMvcRequestBuilders.get("http://localhost:" + port + "/api/participants");
 		mockMvc.perform(request)
 				.andExpect(status().is2xxSuccessful());
 	}
@@ -68,7 +68,7 @@ class ToolshareApplicationTests {
 	@Test
 	public void testGetAllShareItems() throws Exception {
 
-		RequestBuilder request = MockMvcRequestBuilders.get("http://localhost:" + port + "/api/items/items");
+		RequestBuilder request = MockMvcRequestBuilders.get("http://localhost:" + port + "/api/items");
 		mockMvc.perform(request)
 				.andExpect(status().is2xxSuccessful());
 

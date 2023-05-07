@@ -3,6 +3,7 @@ package com.toolshare.toolshare.service;
 
 import com.toolshare.toolshare.exception.BadRequestException;
 import com.toolshare.toolshare.exception.ResourceNotFoundException;
+import com.toolshare.toolshare.model.Participant;
 import com.toolshare.toolshare.model.ShareItem;
 import com.toolshare.toolshare.repository.ItemRepository;
 import com.toolshare.toolshare.repository.ParticipantRepository;
@@ -78,24 +79,23 @@ public class ItemServiceImpl implements ItemService {
      * with the given ID is not found
      */
     @Override
-    public ShareItem createShareItem(
-            final Long id,
-            final ShareItem shareItemAddition) {
+    public ShareItem createShareItem(final Long id, final ShareItem shareItemAddition) {
         if (shareItemAddition.getItemName() == null
-                ||
-                shareItemAddition.getDescription() == null
-                ||
-                shareItemAddition.getPhotoURL() == null) {
-            throw new BadRequestException("Neither itemName, description"
-                    + ", or photoURL can be null");
+                || shareItemAddition.getDescription() == null
+                || shareItemAddition.getPhotoURL() == null
+                || shareItemAddition.getItemName().trim().isEmpty()
+                || shareItemAddition.getDescription().trim().isEmpty()
+                || shareItemAddition.getPhotoURL().trim().isEmpty()) {
+            throw new BadRequestException("itemName, description"
+                    + ", of photoURL mogen niet null of leeg zijn");
         }
-        ShareItem shareItem = participantRepository
-                .findById(id).map(participant -> {
-                    participant.getItems().add(shareItemAddition);
-                    return itemRepository.save(shareItemAddition);
-                }).orElseThrow(() -> new ResourceNotFoundException(
-                        "Deelnemer niet gevonden met id " + id));
-        return shareItem;
+
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Deelnemer niet gevonden met id " + id));
+        participant.getItems().add(shareItemAddition);
+        itemRepository.save(shareItemAddition);
+
+        return shareItemAddition;
     }
 
     /**
@@ -117,8 +117,8 @@ public class ItemServiceImpl implements ItemService {
                     || shareItemEdit.getDescription().isEmpty()
                     || shareItemEdit.getPhotoURL() == null
                     || shareItemEdit.getPhotoURL().isEmpty()) {
-                throw new IllegalArgumentException("Neither item name, "
-                        + "description, nor photo url can be null or empty");
+                throw new IllegalArgumentException("itemName, description"
+                        + "of photoURL mogen niet null of leeg zijn");
             }
             ShareItem itemUpdate = itemRepository.findById(itemId)
                     .orElseThrow(() -> new ResourceNotFoundException(
@@ -130,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
             return itemUpdate;
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "photoURL cannot be null", ex);
+                    HttpStatus.BAD_REQUEST, "photoURL kan niet null zijn", ex);
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);

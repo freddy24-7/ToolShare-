@@ -1,6 +1,7 @@
 
 package com.toolshare.toolshare.service;
 
+import com.toolshare.toolshare.exception.UnsupportedFileTypeException;
 import com.toolshare.toolshare.model.ImageFile;
 import com.toolshare.toolshare.repository.ImageFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,21 @@ public class FileServiceImpl implements FileService {
     @Override
     public ImageFile saveImageFile(final MultipartFile file) throws Exception {
         String fileName = StringUtils.cleanPath((file.getOriginalFilename()));
+        String contentType = file.getContentType();
+        if (contentType != null && contentType.equals("image/heic")) {
+            throw new UnsupportedFileTypeException(
+                    "HEIC-bestanden worden niet ondersteund");
+        }
         try {
             if (fileName.contains("..")) {
-                throw  new Exception("Bestandsnaam bevat ongeldige padvolgorde "
+                throw new Exception("Bestandsnaam bevat ongeldige padvolgorde "
                         + fileName);
             }
-            ImageFile imageFile
-                    = new ImageFile(fileName,
-                    file.getContentType(),
-                    file.getBytes());
+            ImageFile imageFile = new ImageFile(
+                    fileName, contentType, file.getBytes());
             return imageFileRepository.save(imageFile);
+        } catch (UnsupportedFileTypeException e) {
+            throw e;
         } catch (Exception e) {
             throw new Exception("Kon bestand niet opslaan: " + fileName);
         }
